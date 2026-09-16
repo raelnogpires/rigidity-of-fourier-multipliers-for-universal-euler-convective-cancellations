@@ -1,0 +1,128 @@
+\begin{thebibliography}{10}
+
+\bibitem{AlexakisBrachet2020}
+Alexandros Alexakis and Marc-Etienne Brachet.
+\newblock Energy fluxes in quasi-equilibrium flows.
+\newblock {\em Journal of Fluid Mechanics}, 884:A33, 2020.
+
+\bibitem{Betchov1956}
+Robert Betchov.
+\newblock An inequality concerning the production of vorticity in isotropic
+  turbulence.
+\newblock {\em Journal of Fluid Mechanics}, 1(5):497--504, 1956.
+
+\bibitem{CarboneWilczek2022}
+Maurizio Carbone and Michael Wilczek.
+\newblock Only two {B}etchov homogeneity constraints exist for isotropic
+  turbulence.
+\newblock {\em Journal of Fluid Mechanics}, 948:R2, 2022.
+
+\bibitem{CheviakovOberlack2014}
+Alexei~F. Cheviakov and Martin Oberlack.
+\newblock Generalized {E}rtel's theorem and infinite hierarchies of conserved
+  quantities for three-dimensional time-dependent {E}uler and
+  {N}avier--{S}tokes equations.
+\newblock {\em Journal of Fluid Mechanics}, 760:368--386, 2014.
+
+\bibitem{DullinEtAl2019}
+Holger~R. Dullin, James~D. Meiss, and Joachim Worthington.
+\newblock Poisson structure of the three-dimensional {E}uler equations in
+  {F}ourier space.
+\newblock {\em Journal of Physics A: Mathematical and Theoretical},
+  52(36):365501, 2019.
+
+\bibitem{EncisoEtAl2016}
+Alberto Enciso, Daniel Peralta-Salas, and Francisco Torres~de Lizaur.
+\newblock Helicity is the only integral invariant of volume-preserving
+  transformations.
+\newblock {\em Proceedings of the National Academy of Sciences},
+  113(8):2035--2040, 2016.
+
+\bibitem{HarperEtAl2013}
+Katie~L. Harper, Miguel~D. Bustamante, and Sergey~V. Nazarenko.
+\newblock Quadratic invariants for discrete clusters of weakly interacting
+  waves.
+\newblock {\em Journal of Physics A: Mathematical and Theoretical},
+  46(24):245501, 2013.
+
+\bibitem{KhesinEtAl2020}
+Boris Khesin, Daniel Peralta-Salas, and Cheng Yang.
+\newblock The helicity uniqueness conjecture in {3D} hydrodynamics.
+\newblock {\em Transactions of the American Mathematical Society},
+  375(2):909--924, 2022.
+
+\bibitem{KhesinChekanov1989}
+Boris~A. Khesin and Yuri~V. Chekanov.
+\newblock Invariants of the {E}uler equations for ideal or barotropic
+  hydrodynamics and superconductivity in {D} dimensions.
+\newblock {\em Physica D: Nonlinear Phenomena}, 40(1):119--131, 1989.
+
+\bibitem{KraichnanMontgomery1980}
+Robert~H. Kraichnan and David Montgomery.
+\newblock Two-dimensional turbulence.
+\newblock {\em Reports on Progress in Physics}, 43(5):547--619, 1980.
+
+\bibitem{JLee1975b}
+Jon Lee.
+\newblock Isolating constants of motion for the homogeneous turbulence of two
+  and three dimensions.
+\newblock {\em Journal of Mathematical Physics}, 16(7):1367--1373, 1975.
+
+\bibitem{JLee1975a}
+Jon Lee.
+\newblock The triad-interaction representation of homogeneous turbulence.
+\newblock {\em Journal of Mathematical Physics}, 16(7):1359--1366, 1975.
+
+\bibitem{JLee1982}
+Jon Lee.
+\newblock Development of mixing and isotropy in inviscid homogeneous
+  turbulence.
+\newblock {\em Journal of Fluid Mechanics}, 120:155--183, 1982.
+
+\bibitem{TDLee1952}
+T.~D. Lee.
+\newblock On some statistical properties of hydrodynamical and
+  magneto-hydrodynamical fields.
+\newblock {\em Quarterly of Applied Mathematics}, 10(1):69--74, 1952.
+
+\bibitem{Miller2026}
+Evan Miller.
+\newblock On the interaction of strain and vorticity for solutions of the
+  {N}avier--{S}tokes equation.
+\newblock {\em Pure and Applied Analysis}, 8(1):247--270, 2026.
+
+\bibitem{Moffatt2014}
+H.~K. Moffatt.
+\newblock Note on the triad interactions of homogeneous turbulence.
+\newblock {\em Journal of Fluid Mechanics}, 741:R3, 2014.
+
+\bibitem{RathmannDitlevsen2017}
+Nicholas~M. Rathmann and Peter~D. Ditlevsen.
+\newblock Pseudo-invariants causing inverse energy cascades in
+  three-dimensional turbulence.
+\newblock {\em Physical Review Fluids}, 2(5):054607, 2017.
+
+\bibitem{Serre1984}
+Denis Serre.
+\newblock Les invariants du premier ordre de l'\'equation d'euler en dimension
+  trois.
+\newblock {\em Physica D: Nonlinear Phenomena}, 13(1--2):105--136, 1984.
+
+\bibitem{Shebalin2002}
+John~V. Shebalin.
+\newblock The statistical mechanics of ideal homogeneous turbulence.
+\newblock Technical Report NASA/TP-2002-210783, NASA, 2002.
+\newblock NASA Technical Publication.
+
+\bibitem{Vulkov1999}
+Lubin~G. Vulkov.
+\newblock Conservation laws and symmetrization of the equations of
+  incompressible inviscid fluids.
+\newblock {\em Quarterly of Applied Mathematics}, 57(3):549--560, 1999.
+
+\bibitem{Waleffe1992}
+Fabian Waleffe.
+\newblock The nature of triad interactions in homogeneous turbulence.
+\newblock {\em Physics of Fluids A: Fluid Dynamics}, 4(2):350--363, 1992.
+
+\end{thebibliography}

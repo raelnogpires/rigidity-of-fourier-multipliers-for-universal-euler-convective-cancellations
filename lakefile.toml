@@ -1,0 +1,15 @@
+name = "navier-stokes-analysis"
+version = "0.1.0"
+defaultTargets = ["FourierMultiplierRigidity"]
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.33.1"
+
+[[lean_lib]]
+name = "FourierMultiplierRigidity"
+srcDir = "lean"
+# `SeedBridge` imports the root module, so it is not reachable from the root's
+# own import graph and must be listed explicitly for `lake build` to check it.
+globs = ["FourierMultiplierRigidity", "FourierMultiplierRigidity.SeedBridge", "FourierMultiplierRigidity.TheoremA", "FourierMultiplierRigidity.TheoremAZero", "FourierMultiplierRigidity.CorollaryB", "FourierMultiplierRigidity.NonVacuity", "FourierMultiplierRigidity.SolenoidalPropagation", "FourierMultiplierRigidity.SolenoidalSeedCertificate", "FourierMultiplierRigidity.TheoremD", "FourierMultiplierRigidity.FiniteCertificateOptimality", "FourierMultiplierRigidity.LocalSpectra", "FourierMultiplierRigidity.AnisotropicCorollary", "FourierMultiplierRigidity.CorollaryC", "FourierMultiplierRigidity.PhysicalSpaceCorollaryC", "FourierMultiplierRigidity.TorusIntegral", "FourierMultiplierRigidity.PhysicalSpaceIntegral", "FourierMultiplierRigidity.SmoothExtension", "FourierMultiplierRigidity.CertificateStability", "FourierMultiplierRigidity.SolenoidalSeedBridge", "FourierMultiplierRigidity.SolenoidalSeedPlusOneStepBridge"]

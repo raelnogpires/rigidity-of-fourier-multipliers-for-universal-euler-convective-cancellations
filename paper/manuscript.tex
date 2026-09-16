@@ -1,0 +1,2430 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+
+\title{Rigidity of Fourier Multipliers for Universal Euler Convective
+Cancellations}
+\author{Rael Nogueira Pires}
+\date{}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\theoremstyle{plain}
+\newtheorem*{thmA}{Theorem A}
+\newtheorem*{thmAzero}{Theorem A$^{0}$}
+\newtheorem*{corB}{Corollary B}
+\newtheorem*{corC}{Corollary C}
+\newtheorem*{thmD}{Theorem D}
+\newtheorem*{corE}{Corollary E}
+
+\DeclareMathOperator{\curl}{curl}
+\DeclareMathOperator{\dv}{div}
+\DeclareMathOperator{\Sym}{Sym}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\nullity}{nullity}
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\cond}{cond}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\tr}{tr}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Qform}{\mathcal{Q}}
+\newcommand{\Dform}{\mathcal{D}}
+\newcommand{\Ck}{C_k}
+\newcommand{\kperp}{k_{\C}^{\perp}}
+\newcommand{\gsym}{\nabla_{\mathrm{sym}}}
+
+\begin{document}
+
+\emergencystretch=2em
+
+\maketitle
+
+\begin{abstract}
+We prove an operator-level rigidity theorem for universal Euler convective
+cancellations on the three-torus. Let
+$R(k):\kperp\to\C^{3}$, $k\in\Z^{3}\setminus\{0\}$, be an arbitrary
+reality-compatible Fourier symbol, with no boundedness, locality, isotropy,
+self-adjointness, or range assumption. If
+$\langle Rw,(w\cdot\nabla)w\rangle_{L^{2}}=0$ for every real, mean-zero,
+divergence-free trigonometric polynomial $w$, then, and only then,
+\[
+R=A+B\curl+\curl B,
+\qquad A,B\in\operatorname{Sym}(3,\R).
+\]
+Thus universal cancellation forces an arbitrary symbol to be the restriction
+of a constant-coefficient self-adjoint operator of order at most one. If the
+output is also divergence-free, the family reduces to
+$R=cI+d\curl$. The zero-mode block is invisible and remains arbitrary when
+constant fields are admitted. The proof combines phase-polarized triads,
+analytic propagation through $\Z^{3}$, and exact finite rank certificates.
+We also obtain sharp finite test counts under explicit ordering hypotheses,
+identify the isosceles degeneracy caused by Leray projection, and pull the
+classification back to universal strain--vorticity cancellations. The
+certificates are reproduced by exact-arithmetic programs; the Lean~4
+formalization and its compiler-trusted finite-rank dependency are documented
+separately. No application to PDE regularity or existence is claimed.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+\label{sec:intro}
+
+\subsection{The classification problem}
+\label{subsec:problem}
+
+Work on the three-torus $\T^{3}=(\R/2\pi\Z)^{3}$ with normalized Haar
+measure, and call a field \emph{admissible} if it is a real, mean-zero,
+divergence-free trigonometric polynomial. The incompressible Euler equation
+transports such a field by the quadratic convective nonlinearity
+$(w\cdot\nabla)w$. Conservation of kinetic energy and of helicity are the
+statements that the two particular operators $I$ and $\curl$ are orthogonal to
+that nonlinearity,
+\begin{equation}
+\label{eq:intro-energy-helicity}
+\int_{\T^{3}}w\cdot(w\cdot\nabla)w\,dx=0,
+\qquad
+\int_{\T^{3}}\curl w\cdot(w\cdot\nabla)w\,dx=0,
+\end{equation}
+for every admissible $w$. We ask for the converse. Let
+\begin{equation}
+\label{eq:intro-symbol}
+R(k):\kperp\longrightarrow\C^{3},
+\qquad k\in\Z^{3}\setminus\{0\},
+\end{equation}
+be an arbitrary complex-linear symbol, assumed only to be compatible with
+reality, and define the cubic functional
+\begin{equation}
+\label{eq:intro-Q}
+\Qform_{R}(w)
+:=\int_{\T^{3}}Rw\cdot(w\cdot\nabla)w\,dx .
+\end{equation}
+\emph{Which symbols satisfy $\Qform_{R}(w)=0$ for every admissible $w$?}
+
+The hypotheses omit the assumptions that usually make such a question
+tractable. The symbol may depend on $k$ arbitrarily; it need not be bounded,
+homogeneous, isotropic, local, Hermitian, or transverse in its range. Each
+fiber is an independent complex $3\times2$ matrix, so the symbol space is
+infinite-dimensional and has no prescribed structure. Nevertheless, the
+universal cancellation condition forces the symbol into a
+twelve-dimensional real family obtained by restricting constant-coefficient,
+formally self-adjoint operators of order at most one, and a two-dimensional
+family once incompressibility of the output is imposed. Allowing longitudinal
+output enlarges the cancellation kernel; imposing the solenoidal range
+condition collapses it to the energy--helicity family. Within the
+reality-compatible,
+translation-invariant Fourier-multiplier class with solenoidal output considered
+here, the two operators in \eqref{eq:intro-energy-helicity} exhaust the
+possibilities.
+
+\subsection{Main results}
+\label{subsec:main-results}
+
+Write $\Ck v=ik\times v$ for the curl symbol, so that $\Ck$ is Hermitian on
+$\kperp$ and $\Ck^{2}=|k|^{2}I$ there. The main classification is the
+following; it is restated and proved as Theorem~A in
+Sections~\ref{sec:results} and~\ref{sec:propagation}.
+
+\begin{quote}
+\textbf{Theorem A.} A complex-linear, reality-compatible symbol
+$R(k):\kperp\to\C^{3}$ satisfies $\Qform_{R}(w)=0$ for every admissible $w$ if
+and only if there are unique constant real symmetric matrices $A,B$ with
+\[
+R(k)v=Av+B\Ck v+\Ck Bv,
+\qquad v\in\kperp,\quad k\ne0 .
+\]
+\end{quote}
+
+The result has four useful consequences.
+
+\emph{Hermiticity is a conclusion.} The pairing in \eqref{eq:intro-Q} is the
+real $L^{2}$ pairing; in Fourier variables it is the complex-bilinear extension
+of the Euclidean dot product, pairing the coefficients at $k$ and $-k$. No
+adjoint is inserted anywhere, and the hypothesis is not that a quadratic form
+is conserved. A non-Hermitian symbol has a genuine skew sector which
+\emph{does} contribute to $\Qform_{R}$, and the phase polarization of
+Lemma~\ref{lem:phase} is exactly what detects it. Every classified symbol is nevertheless the restriction to $\kperp$ of a
+formally self-adjoint constant-coefficient operator on the full vector-field
+space. In the solenoidal class this is sharp:
+Corollary~B below concludes $R=cI+d\curl$ with no Hermitian assumption made
+anywhere.
+
+\emph{Order and locality are conclusions.} The hypothesis allows nonlocal
+symbols of arbitrary growth. The conclusion is a differential operator of
+order at most one with constant coefficients.
+
+\emph{The longitudinal directions are cancellations, not invariants.} The
+functional \eqref{eq:intro-Q} is cubic in $w$ and pairs $R$ against the
+quadratic convection. When $R$ is self-adjoint on the solenoidal phase space,
+$\Qform_{R}$ is the Euler derivative of the quadratic functional
+$\tfrac12\langle w,Rw\rangle$. For a general $R:\kperp\to\C^{3}$ it is only a
+convective cancellation: longitudinal output can couple to the pressure, so
+the ten extra directions in the twelve-dimensional family must not be
+advertised as new Euler invariants. We return to this point in
+Section~\ref{subsec:not-invariants}.
+
+\emph{The zero mode is invisible, not rigid.} If the mean-zero hypothesis is
+dropped, Theorem~A$^{0}$ shows that the classification is unchanged on every
+nonzero mode while $R(0)$ remains an arbitrary real $3\times3$ matrix. No
+field evaluation can see it, because periodic convection has zero spatial
+mean. The total kernel dimension is then $12+9=21$.
+
+Imposing incompressibility of the output collapses the family:
+
+\begin{quote}
+\textbf{Corollary B.} If in addition $R(k)\kperp\subset\kperp$ for every
+$k\ne0$, then $\Qform_{R}\equiv0$ holds if and only if $R(k)=cI+d\Ck$ for two
+global real constants $c,d$. In particular every nonzero-mode fiber is
+Hermitian.
+\end{quote}
+
+Because $\curl$ is invertible on mean-zero solenoidal periodic fields, the
+whole classification transports to the strain--vorticity pairing. Writing
+$\omega=\curl u$ and
+$S=\gsym u$, and setting
+$\Dform_{T}(u)=\langle\gsym(Tu),\omega\otimes\omega\rangle$, we obtain:
+
+\begin{quote}
+\textbf{Corollary C.} $\Dform_{T}(u)=0$ for every admissible $u$ if and only if
+$T=A\curl+B(-\Delta)+\curl B\curl$ with $A,B$ constant real symmetric; with
+solenoidal output this reduces to $T=c\curl+d(-\Delta)$.
+\end{quote}
+
+The scalar case $T=-\Delta$ of the second formula gives the Laplacian identity
+$\langle-\Delta S,\omega\otimes\omega\rangle=0$. Corollary~C says that within
+the translation-invariant multiplier class this identity and the first-order
+one are the only universal strain--vorticity cancellations with solenoidal
+output, and it identifies precisely which longitudinal completions restore
+cancellation for an arbitrary anisotropic second-order scalar operator
+(Corollary~E, Section~\ref{subsec:anisotropic}).
+The scalar identity is due to Miller~\cite{Miller2026}; the classification
+here includes it as one member of the larger multiplier family.
+
+Finally, the proof is quantitative. Under two explicit ordering hypotheses on
+a finite symmetric mode set with $M$ unoriented classes, we prove the existence
+of test families with exactly $8M-2$, $4M-2$ and $12M-12$ real field
+evaluations that certify the classification in the complex solenoidal,
+Hermitian solenoidal and unrestricted-output classes respectively, and we show
+that no smaller family can work (Theorem~D). The machine-readable supplement
+exports the selected seed rows, pivot columns, mode order and parameter
+ordering used by the nonsingular-minor certificates. For a coordinate box of radius $N$ these have the
+optimal $\Theta(N^{3})$ size rather than the $\Theta(N^{6})$ cost of scanning
+a dense collection of triads.
+
+\subsection{Method, and what is checked by machine}
+\label{subsec:method}
+
+The proof separates a finite exact calculation from analytic propagation over
+the lattice.
+
+Sufficiency (Section~\ref{sec:sufficiency}) is a short analytic computation.
+For necessity, Lemma~\ref{lem:phase} shows that testing $\Qform_{R}$ on real
+six-mode fields supported on a non-collinear triad $p+q+r=0$, with total phase
+products $1$ and $i$, recovers the full complex triad coefficient. Two local
+lemmas then describe what one triad sees at a fixed recipient mode. In the
+unrestricted class, one triad annihilates eight of the twelve real parameters
+of the recipient block and leaves a single complex image line
+(Lemma~\ref{lem:rawline}); a second triad with a non-parallel difference
+direction finishes the job. In the solenoidal class, a single triad with
+parents of unequal length already determines all eight real parameters of the
+recipient block, while equal parent lengths leave a four-dimensional residue
+(Lemma~\ref{lem:projected}). This isosceles defect is created exactly by the
+Leray projection and is invisible before it; Proposition~\ref{prop:projected}
+computes the responsible singular value in closed form.
+
+The induction that turns those local statements into a global theorem needs a
+base case that no triad argument supplies, and this is where exact computation
+enters. Two finite constraint matrices are built and their ranks are certified
+over $\Q$:
+\begin{center}
+\begin{tabular}{lrrrrr}
+\hline
+Class & Seed modes & Parameters & Rows & Rank & Nullity\\
+\hline
+Hermitian solenoidal & $7$ & $28$ & $592$ & $26$ & $2$\\
+Complex solenoidal & $7$ & $56$ & $720$ & $54$ & $2$\\
+Complex unrestricted output & $13$ & $156$ & $680$ & $144$ & $12$\\
+\hline
+\end{tabular}
+\end{center}
+In each case the matching kernel is exhibited explicitly by the classified
+generators, so rank and nullity together give an exact kernel \emph{equality},
+not merely a bound (equations \eqref{eq:seed-kernel-sol} and
+\eqref{eq:seed-kernel-raw}). Rank is certified from below by a nonsingular
+minor evaluated modulo two primes, and from above by the explicit kernel. No
+floating-point rank decision and no numerical tolerance enters at any point:
+the programs use integers, exact rational arithmetic, or reductions modulo
+primes. Two of the certificates are reproduced by algorithmically independent
+implementations that reconstruct the convolution by recipient wavevector
+rather than reusing the row builders.
+
+The formal development in Lean~4 with Mathlib covers Theorem~A and
+Corollary~B together with four supporting components: the arbitrary real
+zero block in Theorem~A$^{0}$; the torus-integral realization of
+Corollary~C and its extension to smooth solenoidal fields; the sharp scalar
+evaluation counts underlying Theorem~D at
+the finite-dimensional matrix level; and the local singular spectra,
+conditioning bounds, bad family and stability modulo the exact kernel from
+Section~\ref{sec:singular}. The source contains no admitted proofs. The two
+finite seed rank certificates use \texttt{native\_decide}, which the
+machine-readable axiom report exposes as seven compiled-code axioms, and the
+twenty-six-row physical-to-matrix reconstruction for the Hermitian seed is an
+external exact check rather than a kernel theorem. Section~\ref{sec:computer}
+gives the result-by-result trust boundary and records what remains analytic.
+
+\subsection{Relation to prior work}
+\label{subsec:prior}
+
+The result sits next to several classification literatures. We organize the
+comparison by the object being classified rather than chronologically, since
+the hypotheses differ far more than the conclusions do.
+
+\emph{Rugged quadratic invariants and Galerkin truncations.} That energy and
+helicity are well-established quadratic invariants of three-dimensional Euler
+in Fourier-truncated settings. T.~D.~Lee's statistical mechanics of
+Galerkin-truncated ideal flow~\cite{TDLee1952}, Kraichnan's
+absolute-equilibrium theory and the Kraichnan--Montgomery
+review~\cite{KraichnanMontgomery1980}, Jon Lee's triad-interaction
+representation and isolating constants of motion~\cite{JLee1975a,JLee1975b},
+his later study of mixing on constant energy--helicity
+surfaces~\cite{JLee1982}, and Shebalin's monograph~\cite{Shebalin2002} form
+the historical base. Shebalin states that three-dimensional Euler admits no
+further bilinear integral invariants. None of these formulates an arbitrary
+mode-dependent matrix symbol, retains longitudinal output, or treats the
+non-Hermitian sector classified here.
+
+\emph{Local conservation laws.} Serre classifies the first-order local
+invariants of three-dimensional Euler~\cite{Serre1984}; Vulkov derives the
+conservation laws and symmetric forms of the incompressible inviscid-fluid
+equations~\cite{Vulkov1999}; and Cheviakov and Oberlack construct hierarchies
+of conserved quantities from generalized Ertel
+theorems~\cite{CheviakovOberlack2014}. These are differential-density
+classifications under a local finite-order ansatz. The present hypothesis
+admits arbitrary nonlocal modewise symbols from the start.
+
+\emph{Hamiltonian and Casimir uniqueness.} Khesin and
+Chekanov~\cite{KhesinChekanov1989}, Enciso, Peralta-Salas and Torres de
+Lizaur~\cite{EncisoEtAl2016}, Khesin, Peralta-Salas and
+Yang~\cite{KhesinEtAl2020}, and Dullin, Meiss and
+Worthington~\cite{DullinEtAl2019} classify invariants under much stronger
+geometric hypotheses --- invariance under volume-preserving diffeomorphisms,
+or the Lie--Poisson structure in Fourier space. Helicity uniqueness there is a
+statement about regular integral invariants of a group action. Our hypothesis
+is convective orthogonality alone, and energy is included in the conclusion
+rather than excluded by the symmetry requirement.
+
+\emph{Helical and triad geometry.} Waleffe's helical decomposition makes the
+energy--helicity constraints on a single triad transparent~\cite{Waleffe1992};
+Moffatt exhibits further invariants of an isolated triad~\cite{Moffatt2014};
+Rathmann and Ditlevsen study pseudo-invariants of restricted helical
+interactions~\cite{RathmannDitlevsen2017}; Alexakis and Brachet analyze fluxes
+in quasi-equilibrium~\cite{AlexakisBrachet2020}. Invariants of an isolated or
+decimated triad system are strictly more numerous than universal ones, which
+is exactly the distinction that propagation over the full lattice enforces
+here.
+
+\emph{Triad-network nullspaces.} Harper, Bustamante and
+Nazarenko~\cite{HarperEtAl2013} reduce the quadratic invariants of discrete
+clusters of weakly interacting waves to sparse matrix nullspaces. The broad
+methodology of computing invariants as nullspaces of triad-interaction
+matrices is therefore prior art, and we claim no novelty for it. What is
+different here is the symbol class, the passage from a finite cluster to the
+entire lattice, and the exact rank structure of that passage.
+
+\emph{Kinematic strain--vorticity constraints.} Betchov's homogeneity
+relation~\cite{Betchov1956} and the proof by Carbone and Wilczek that only two
+such constraints exist for isotropic turbulence~\cite{CarboneWilczek2022} are
+the closest kinematic antecedents of the pullback in
+Section~\ref{sec:strainvorticity}. The scalar Laplacian
+strain--vorticity identity is a direct antecedent of Corollary~C; our claim
+concerns the classification and the anisotropic longitudinal completion.
+
+\subsection{Novelty boundary and claims not made}
+\label{subsec:boundary}
+
+To the best of our knowledge, the existing local-conservation,
+rugged-invariant, Hamiltonian/Casimir and helical-triad classifications do
+not
+state the all-symbol implication proved here, its automatic-Hermiticity
+corollary, or the unrestricted longitudinal kernel. We therefore treat these
+as candidate new results, subject to specialist and peer review. A targeted
+prior-art audit located no exact duplicate, but a literature search cannot
+establish historical priority, and equivalent statements could be embedded in
+older sources indexed under different terminology.
+
+The following standard facts are not claimed as new: conservation of energy and
+helicity; their triad-by-triad manifestations; additional invariants of
+isolated or decimated triad systems; the helical decomposition; classifications
+of local conservation laws and of regular Casimirs; triad-network nullspace
+methodology; and the scalar Laplacian strain--vorticity identity.
+
+The following are explicitly \emph{not} proved anywhere in this paper.
+\begin{enumerate}
+\item No result on PDE existence, smoothness, or regularity is claimed. The
+anisotropic completion of Section~\ref{subsec:anisotropic} is a structural identity; it identifies the
+Hessian defect exactly, but supplies no new scale-critical, time-integrable
+bound for it.
+\item No closed coercive a priori estimate is proved.
+\item No multiplier theorem on $\R^{3}$. The propagation argument uses the
+lattice $\Z^{3}$ throughout.
+\item No rigidity at the zero Fourier mode; that block is proved invisible and
+remains arbitrary.
+\item No boundedness, continuity or growth hypothesis is imposed on the
+symbol. The classification itself implies
+$\|R(k)\|=O_{A,B}(1+|k|)$, but no multiplier-extension or form-domain theorem on
+completed function spaces is developed here. All tests are trigonometric
+polynomials, so every sum is finite.
+\item No classification of nonlinear, time-dependent, or
+non-translation-invariant functionals.
+\item Minimality of the seven-mode seed is proved only among subsets of the
+coordinate unit cube, not among arbitrary six-mode lattice configurations.
+\item Theorem~D applies only under its two explicit ordering hypotheses, not
+to an arbitrary finite symmetric mode set.
+\end{enumerate}
+
+\subsection{Outline}
+\label{subsec:outline}
+
+Section~\ref{sec:setting} fixes the conventions --- frames, reality, the
+bilinear pairing --- and proves the coordinate-invariance lemma that reconciles
+the normalized frames used in the text with the integer frames used by the
+certificate programs. Section~\ref{sec:results} states the complete theorem
+package. Section~\ref{sec:sufficiency} proves sufficiency.
+Section~\ref{sec:triad} develops the triad reduction and the two local lemmas.
+Section~\ref{sec:seeds} constructs the exact finite seeds and states their
+certified kernels. Section~\ref{sec:propagation} carries out the lattice
+propagation and completes the proofs of Theorems~A, A$^{0}$, D and
+Corollary~B. Section~\ref{sec:singular} computes the raw and projected
+singular spectra and the conditioning of the explicit route.
+Section~\ref{sec:strainvorticity} proves Corollary~C and the anisotropic
+longitudinal completion. Section~\ref{sec:computer} documents the
+computer-assisted components, their reproduction, and the formalization trust
+boundary. Section~\ref{sec:discussion} collects limitations and open problems.
+Appendix~\ref{app:certificates} tabulates the certificate data.
+
+\section{Setting, notation and conventions}
+\label{sec:setting}
+
+\subsection{Fields and symbols}
+
+Work on $\T^{3}=(\R/2\pi\Z)^{3}$ with normalized Haar measure. A
+\emph{test field} is a real, mean-zero, divergence-free trigonometric
+polynomial,
+\begin{equation}
+\label{eq:testfield}
+w(x)=\sum_{k\in\Z^{3}\setminus\{0\}}\widehat w(k)e^{ik\cdot x},
+\qquad
+k\cdot\widehat w(k)=0,
+\qquad
+\widehat w(-k)=\overline{\widehat w(k)},
+\end{equation}
+with finite Fourier support. We call such a field \emph{admissible}. For each
+$k\ne0$ set
+\begin{equation}
+\label{eq:curlsymbol}
+\Ck v=ik\times v .
+\end{equation}
+On $\kperp$ the operator $\Ck$ is Hermitian and satisfies
+\begin{equation}
+\label{eq:curlsq}
+\Ck^{2}=|k|^{2}I .
+\end{equation}
+A symbol $R$ is \emph{reality compatible} when
+\begin{equation}
+\label{eq:reality}
+R(-k)\overline v=\overline{R(k)v},
+\qquad v\in\kperp .
+\end{equation}
+Two symbol classes occur throughout,
+\begin{equation}
+\label{eq:classes}
+\mathcal R_{\mathrm{raw}}
+=\{R(k):\kperp\to\C^{3}\},
+\qquad
+\mathcal R_{\mathrm{sol}}
+=\{R(k):\kperp\to\kperp\} ;
+\end{equation}
+the first allows longitudinal output, the second preserves
+incompressibility. When the zero mode is admitted we use the convention
+$0_{\C}^{\perp}=\C^{3}$, so that reality compatibility says exactly that
+$R(0)$ is a real $3\times3$ matrix.
+
+There is no boundedness or growth assumption on $R(k)$. Since every test
+field is a trigonometric polynomial, all sums below are finite.
+
+\subsection{The canonical transverse frame}
+
+To make \eqref{eq:reality} an unambiguous matrix identity, fix a frame
+convention. For $k\ne0$ let $\kappa(k)$ be the member of $\{k,-k\}$ whose
+first nonzero coordinate is positive, let $j(\kappa)$ be the least index with
+$\kappa\times e_{j}\ne0$, and set
+\begin{equation}
+\label{eq:frame}
+f_{1}(\kappa)
+=\frac{\kappa\times e_{j(\kappa)}}{|\kappa\times e_{j(\kappa)}|},
+\qquad
+f_{2}(\kappa)=\frac{\kappa}{|\kappa|}\times f_{1}(\kappa).
+\end{equation}
+For \emph{both} signed modes $k$ and $-k$ we use the same real orthonormal
+frame
+\begin{equation}
+\label{eq:sameframe}
+\mathcal F(k)=\mathcal F(-k)
+=\bigl(f_{1}(\kappa(k)),f_{2}(\kappa(k))\bigr).
+\end{equation}
+Thus $(f_{1},f_{2},\kappa/|\kappa|)$ is positively oriented at the canonical
+representative, and compatibility with reality --- rather than positive
+orientation --- is what is retained at its negative. In these frames
+\eqref{eq:reality} reads $R(-k)=\overline{R(k)}$.
+
+\subsection{The pairing}
+\label{subsec:pairing}
+
+The pairing in \eqref{eq:intro-Q} is the real $L^{2}$ pairing of two real
+fields. In Fourier coordinates it uses the complex-\emph{bilinear} extension
+of the Euclidean dot product to pair the coefficient at $k$ with the
+coefficient at $-k$. No adjoint and no conjugation is silently inserted.
+
+This convention must be fixed before any row calculation, because it is what
+makes the automatic-self-adjointness statement meaningful. Had the
+sesquilinear pairing been used, the skew-Hermitian part of $R$ would be
+annihilated by construction and Corollary~B would be a statement about a
+quotient rather than about the symbol.
+
+\subsection{Coordinate invariance of the certificates}
+
+The exposition uses the normalized frames \eqref{eq:frame}; the certificate
+programs use an integer, non-normalized transverse frame, which keeps all
+arithmetic exact over $\Z$ or $\Q$. The following lemma reconciles them.
+
+\begin{lemma}[coordinate and generated-row invariance]
+\label{lem:coordinates}
+Fix a finite geometric family of real triad-supported test fields. Replacing
+only the transverse frames used to express the symbol blocks preserves the
+rank, the nullity and the geometric kernel of the resulting constraint matrix.
+
+Separately, fix finitely many triads and, on each of them, generate the full
+row space using all tensor-product polarizations from a transverse basis at
+each mode together with the two total phase classes $1$ and $i$. Replacing
+those polarization bases preserves this complete generated row space, hence its
+rank and nullity. No such statement is made for an arbitrary proper subset of
+the coordinate-generated rows.
+\end{lemma}
+
+\begin{proof}
+If $F_{k}$ and $G_{k}$ are two real bases of $k^{\perp}$, then
+$G_{k}=F_{k}S_{k}$ with $S_{k}\in\mathrm{GL}_{2}(\R)$. For a fixed geometric
+test family, changing the domain coordinates of a raw block --- or both domain
+and range coordinates of a solenoidal block --- right-multiplies the complete
+constraint matrix by an invertible block-diagonal matrix. This preserves rank
+and nullity and merely re-expresses the same geometric kernel.
+
+If the test polarizations are also replaced, trilinearity of
+$(w,w,w)\mapsto\Qform_{R}(w)$ expresses the full tensor-product family in the
+new bases as an invertible multilinear combination of the full family in the
+old bases; Lemma~\ref{lem:phase} gives the same statement for the two real
+phase rows. The two complete generated row spaces therefore agree after the
+change of coordinates. An arbitrary selected subset of coordinate rows need
+not be carried to an equally indexed subset, which is why no such claim is
+included.
+\end{proof}
+
+The dense seed matrices of Section~\ref{sec:seeds} use the complete
+phase--polarization families, so the second part of Lemma~\ref{lem:coordinates}
+applies to them. Once particular minor rows have been selected, they are fixed
+geometric test fields, and changing only the symbol coordinates falls under the
+first part. The integer script convention therefore certifies the same
+geometric kernels as the normalized convention used here. Since the changes of
+coordinates need not be orthogonal, numerical singular values are \emph{not}
+preserved; all singular values in Section~\ref{sec:singular} refer to the
+normalized convention.
+
+\subsection{Triad conventions}
+
+A \emph{triad} is a relation $p+q+r=0$ among lattice modes, and it is
+\emph{non-collinear} when $p\times q\ne0$. In propagation arguments the new
+mode is called the \emph{target} and written $t$; its known \emph{parents} are
+$q,r$ with
+\begin{equation}
+\label{eq:targetconv}
+t=q+r,
+\qquad
+p=-t,
+\qquad
+p+q+r=0 .
+\end{equation}
+The local lemmas act at the \emph{recipient} $p=-t$ and therefore prove
+$D(-t)=0$ first; reality compatibility then gives $D(t)=0$. Consequently
+$D(k)=0$ if and only if $D(-k)=0$, so every set of known modes below is
+automatically symmetric under $k\mapsto-k$, and we use this without further
+comment.
+
+The raw convection received at $p$ is
+$N=(U\cdot r)V+(V\cdot q)U$; the Leray projection $P_{p^{\perp}}$ is applied
+only in the solenoidal output class.
+
+\section{The theorem package}
+\label{sec:results}
+
+\subsection{Unrestricted-output classification}
+\label{subsec:thmA}
+
+\begin{thmA}[unrestricted-output rigidity]
+\label{thm:A}
+Let $R(k):\kperp\to\C^{3}$, $k\ne0$, be a complex-linear, reality-compatible
+symbol. Then
+\begin{equation}
+\label{eq:universal}
+\Qform_{R}(w)=0
+\quad\text{for every admissible }w
+\end{equation}
+holds if and only if there are unique constant real symmetric matrices $A,B$
+with
+\begin{equation}
+\label{eq:generator}
+R(k)v=Av+B\Ck v+\Ck Bv,
+\qquad v\in\kperp,\quad k\ne0 .
+\end{equation}
+\end{thmA}
+
+Sufficiency is proved in Section~\ref{sec:sufficiency}, necessity in
+Section~\ref{subsec:rawprop}. Uniqueness is the following self-contained
+statement, which uses only the signed coordinate-axis modes and is independent
+of every finite-rank certificate.
+
+\begin{proposition}[uniqueness of the two matrix coefficients]
+\label{prop:uniqueness}
+If $A,B\in\Sym(3,\R)$ satisfy
+$Av+B\Ck v+\Ck Bv=0$ for every $k\ne0$ and every $v\in\kperp$, then $A=B=0$.
+Consequently the pair $(A,B)$ in Theorem~A is unique.
+\end{proposition}
+
+\begin{proof}
+Evaluate the identity at $k$ and at $-k$, recalling $C_{-k}=-\Ck$, and add and
+subtract. For every $v\perp k$ this gives
+\[
+Av=0,
+\qquad
+B\Ck v+\Ck Bv=0 .
+\]
+Taking $k=e_{1}$ and $k=e_{2}$ in the first identity shows that $A$ annihilates
+all three coordinate vectors, so $A=0$.
+
+For the second identity write $\Ck=iK_{k}$ with $K_{k}v=k\times v$ and divide
+by $i$. With $B=(b_{mn})$ symmetric, the four coordinate evaluations are
+\[
+\begin{array}{c|c}
+(k,v)&BK_{k}v+K_{k}Bv\\ \hline
+(e_{1},e_{2})&(b_{13},0,b_{22}+b_{33})^{T}\\
+(e_{1},e_{3})&(-b_{12},-b_{22}-b_{33},0)^{T}\\
+(e_{2},e_{1})&(0,-b_{23},-b_{11}-b_{33})^{T}\\
+(e_{3},e_{1})&(0,b_{11}+b_{22},b_{23})^{T}.
+\end{array}
+\]
+Setting these four vectors to zero gives
+$b_{13}=b_{12}=b_{23}=0$ and
+$b_{22}+b_{33}=b_{11}+b_{33}=b_{11}+b_{22}=0$, whence all three diagonal
+entries vanish as well. Thus $B=0$.
+\end{proof}
+
+\begin{thmAzero}[all-mode completion]
+\label{thm:Azero}
+Let $R(k):\kperp\to\C^{3}$, $k\in\Z^{3}$, be complex-linear and reality
+compatible, with $0_{\C}^{\perp}=\C^{3}$. Then
+\begin{equation}
+\label{eq:universal-allmode}
+\Qform_{R}(w)=0
+\quad\text{for every real divergence-free trigonometric polynomial }w
+\end{equation}
+holds if and only if there are unique $A,B\in\Sym(3,\R)$ such that
+\eqref{eq:generator} holds for every $k\ne0$, while $R(0)$ is an arbitrary
+real $3\times3$ matrix.
+\end{thmAzero}
+
+\begin{proof}
+Necessity on the nonzero modes follows by restricting
+\eqref{eq:universal-allmode} to mean-zero fields and applying Theorem~A;
+reality compatibility at $k=0$ is exactly reality of the matrix entries.
+
+For sufficiency write $w=a+u$ with $a\in\R^{3}$ constant and $u$ mean zero.
+Periodicity and $\dv u=0$ give
+\begin{equation}
+\label{eq:zeromean}
+\int_{\T^{3}}(a\cdot\nabla)u\,dx=0,
+\qquad
+\int_{\T^{3}}(u\cdot\nabla)u\,dx=0,
+\end{equation}
+so the constant vector $R(0)a$ is orthogonal to the complete convective term.
+On the nonzero modes let $S=A+B\curl+\curl B$. This is a constant-coefficient
+self-adjoint operator and it commutes with the directional derivative
+$D_{a}=a\cdot\nabla$, whence
+\begin{equation}
+\label{eq:commute}
+\langle Su,D_{a}u\rangle
+=\langle u,D_{a}Su\rangle
+=-\langle D_{a}u,Su\rangle=0 .
+\end{equation}
+The remaining term is $\Qform_{S}(u)=0$ by Theorem~A, or directly by
+Section~\ref{sec:sufficiency}. Thus \eqref{eq:universal-allmode} holds for
+every $w$, with no restriction on $R(0)$.
+\end{proof}
+
+Three consequences deserve emphasis. The universal kernel has real dimension
+$12$ on the mean-zero phase space and dimension $21$ in the all-mode
+formulation --- twelve rigid nonzero-mode parameters and nine invisible
+zero-mode ones. A completely arbitrary, potentially nonlocal symbol is forced
+to have constant coefficients and differential order at most one. And admitting
+constant velocities as tests neither creates new nonzero-mode symbols nor
+constrains the zero-mode block.
+
+\subsection{Solenoidal classification and automatic self-adjointness}
+\label{subsec:corB}
+
+\begin{lemma}[scalarity from lattice directions]
+\label{lem:scalarity}
+Let $L\in\Sym(3,\R)$. If $Lk\parallel k$ for every $k\in\Z^{3}\setminus\{0\}$,
+then $L=cI$ for some $c\in\R$.
+\end{lemma}
+
+\begin{proof}
+Applying the hypothesis to $e_{1},e_{2},e_{3}$ makes the coordinate vectors
+eigenvectors, so $L=\mathrm{diag}(\lambda_{1},\lambda_{2},\lambda_{3})$.
+Applying it to $e_{i}+e_{j}$ gives $\lambda_{i}=\lambda_{j}$ for each $i\ne j$.
+\end{proof}
+
+\begin{corB}[solenoidal rigidity]
+\label{cor:B}
+Under the hypotheses of Theorem~A, assume in addition the range condition
+\begin{equation}
+\label{eq:range}
+R(k)\kperp\subset\kperp
+\qquad(k\ne0).
+\end{equation}
+Then \eqref{eq:universal} holds if and only if
+\begin{equation}
+\label{eq:scalarform}
+R(k)=cI+d\Ck
+\end{equation}
+for two global real constants $c,d$. In particular the cubic identity forces
+every nonzero-mode block $R(k)$ to be Hermitian.
+\end{corB}
+
+\begin{proof}
+Sufficiency is contained in Theorem~A, since $cI+d\Ck$ is the case
+$A=cI$, $B=(d/2)I$ of \eqref{eq:generator} and preserves $\kperp$ by
+\eqref{eq:curlsq}. For necessity, apply Theorem~A to obtain
+\eqref{eq:generator} and impose \eqref{eq:range}. Let $v\perp k$. Since
+$\Ck Bv=ik\times Bv$ is orthogonal to $k$, the range condition at $k$ says
+\[
+k\cdot Av+k\cdot B\Ck v=0 ,
+\]
+and at $-k$, using $C_{-k}=-\Ck$ and the same frame \eqref{eq:sameframe}, it
+says $k\cdot Av-k\cdot B\Ck v=0$. Adding and subtracting gives
+\[
+k\cdot Av=0,
+\qquad
+k\cdot B\Ck v=0
+\qquad\text{for all }v\in\kperp .
+\]
+By \eqref{eq:curlsq} the map $\Ck:\kperp\to\kperp$ is onto, so the second
+identity says $k\cdot Bw=0$ for every $w\in\kperp$. Symmetry of $A$ and $B$
+now converts both statements into
+\[
+Ak\parallel k,
+\qquad
+Bk\parallel k
+\]
+for every lattice direction $k$. Lemma~\ref{lem:scalarity} forces $A=cI$ and
+$B=bI$, and \eqref{eq:generator} becomes $R=cI+2b\Ck$.
+\end{proof}
+
+In the all-mode formulation of Theorem~A$^{0}$ the same argument gives
+$R(k)=cI+d\Ck$ for every $k\ne0$, while $R(0)$ remains an arbitrary real
+$3\times3$ matrix: every constant field is divergence free, so the range
+condition is vacuous there. Universal cancellation forces Hermiticity on every
+nonzero fiber, and cannot force it at zero.
+
+Corollary~B also admits a direct and sharper proof inside the solenoidal
+class, using a seven-mode seed and one unequal-length triad per new mode. That
+route is retained in Sections~\ref{sec:seeds} and \ref{sec:propagation}
+because it yields the optimal $8M-2$ certificate and the projected
+conditioning law, neither of which follows from the algebraic reduction above.
+
+\subsection{Pullback to strain--vorticity cancellations}
+\label{subsec:corC}
+
+Let $u$ be admissible and write $\omega=\curl u$, $S=\gsym u$. For a
+translation-invariant vector multiplier $T(k):\kperp\to\C^{3}$ define
+\begin{equation}
+\label{eq:Dform}
+\Dform_{T}(u)
+=\langle\gsym(Tu),\omega\otimes\omega\rangle .
+\end{equation}
+
+\begin{corC}[complete strain--vorticity classification]
+\label{cor:C}
+$\Dform_{T}(u)=0$ for every admissible $u$ if and only if
+\begin{equation}
+\label{eq:Tfamily}
+T=A\curl+B(-\Delta)+\curl B\curl,
+\qquad A=A^{T},\quad B=B^{T} ,
+\end{equation}
+for a unique pair of constant real symmetric matrices. If $T$ is required to
+preserve divergence-free output, this reduces to
+\begin{equation}
+\label{eq:Tsol}
+T=c\curl+d(-\Delta),
+\qquad c,d\in\R .
+\end{equation}
+\end{corC}
+
+The proof is in Section~\ref{subsec:pullback}. As in Theorem~A$^{0}$, the
+mean-zero hypothesis on $u$ may be dropped and $T(0)$ included as an arbitrary
+real $3\times3$ block: $\omega=\curl u$ is always mean zero, and
+$\gsym(T(0)\widehat u(0))=0$. Thus \eqref{eq:Tfamily}--\eqref{eq:Tsol}
+classify every nonzero block and the zero block is exactly invisible.
+
+\subsection{Sharp finite certificates}
+\label{subsec:thmD}
+
+Let $\Lambda\subset\Z^{3}\setminus\{0\}$ be a finite symmetric set of nonzero
+modes, write $[k]=\{k,-k\}$, and let $M=|\Lambda/\{\pm1\}|$ be its number of
+unoriented modes. The signed Boolean seed $\mathcal B_{7}\cup(-\mathcal
+B_{7})$ and the coordinate unit cube $\Lambda_{1}$ are defined in
+\eqref{eq:boolean} and \eqref{eq:unitcube}.
+
+\begin{definition}[unequal-triad ordering]
+\label{def:unequal}
+A finite symmetric set $\Lambda$ has an \emph{unequal-triad ordering} if it
+contains the signed Boolean seed and its remaining unoriented classes can be
+ordered as $[t_{1}],\dots,[t_{M-7}]$ so that at step $j$ there are signed modes
+$q_{j},r_{j}$ in the seed or in earlier classes with
+\[
+t_{j}=q_{j}+r_{j},
+\qquad
+q_{j}\times r_{j}\ne0,
+\qquad
+|q_{j}|\ne|r_{j}| .
+\]
+The full six-mode support $\{\pm t_{j},\pm q_{j},\pm r_{j}\}$ of each
+witnessing triad is required to lie in $\Lambda$.
+\end{definition}
+
+\begin{definition}[two-triad ordering]
+\label{def:twotriad}
+A finite symmetric set $\Lambda$ has a \emph{two-triad ordering} if it contains
+$\Lambda_{1}$ and its remaining unoriented classes can be ordered as
+$[t_{1}],\dots,[t_{M-13}]$ so that at step $j$ there are earlier signed modes
+$q_{j},r_{j},q'_{j},r'_{j}$ with
+\[
+t_{j}=q_{j}+r_{j}=q'_{j}+r'_{j},
+\qquad
+q_{j}\times r_{j}\ne0,
+\qquad
+q'_{j}\times r'_{j}\ne0,
+\qquad
+r_{j}-q_{j}\not\parallel r'_{j}-q'_{j} .
+\]
+Again the full six-mode support of both witnessing triads must lie in
+$\Lambda$.
+\end{definition}
+
+\begin{thmD}[sharp finite certificates]
+\label{thm:D}
+Let $\Lambda$ be a finite symmetric set with $M$ unoriented modes.
+\begin{enumerate}
+\item If $\Lambda$ has an unequal-triad ordering, then a general complex
+solenoidal symbol on $\Lambda$ has $8M$ real parameters, and there exists a
+family of exactly $8M-2$ real triad-supported field evaluations certifying the
+energy--helicity form \eqref{eq:scalarform}.
+\item Under the same ordering hypothesis, there exists a certifying family of
+exactly $4M-2$ evaluations in the Hermitian solenoidal subclass, and this
+cardinality is minimal.
+\item If $\Lambda$ has a two-triad ordering, then a general
+unrestricted-output symbol on $\Lambda$ has $12M$ real parameters, and there
+exists a family of exactly $12M-12$ evaluations certifying
+\eqref{eq:generator}.
+\end{enumerate}
+No scalar test family with fewer evaluations can work in any of these
+settings, because one
+real field evaluation supplies at most one real linear equation while the
+unavoidable kernels have dimensions $2$, $2$ and $12$ respectively.
+\end{thmD}
+
+The theorem makes no claim for a finite symmetric set lacking one of the two
+orderings. Its proof is in Section~\ref{subsec:thmDproof}. For every
+coordinate box $\Lambda_{N}=\{k\ne0:|k_{j}|\le N\}$ with $N\ge1$ both ordering
+hypotheses hold, and
+\begin{equation}
+\label{eq:boxcount}
+M_{N}=4N^{3}+6N^{2}+3N ,
+\end{equation}
+so that the sharp counts are
+\begin{equation}
+\label{eq:boxtests}
+\begin{array}{c|c}
+\text{symbol class}&\text{number of tests}\\ \hline
+\text{Hermitian solenoidal}&16N^{3}+24N^{2}+12N-2\\
+\text{complex solenoidal}&32N^{3}+48N^{2}+24N-2\\
+\text{unrestricted output}&48N^{3}+72N^{2}+36N-12 .
+\end{array}
+\end{equation}
+These families have the optimal $\Theta(N^{3})$ size rather than the
+$\Theta(N^{6})$ cost of scanning a dense collection of triads. They classify
+the nonzero blocks; if a zero-mode block is appended, no field evaluation can
+constrain its nine real parameters, so sharpness is understood modulo that
+exactly invisible block.
+
+\section{Sufficiency: why the displayed generators cancel}
+\label{sec:sufficiency}
+
+The sufficiency half of Theorem~A is analytic and independent of every finite
+certificate. Let $w$ be admissible and $A=A^{T}$ constant. Then
+\begin{equation}
+\label{eq:suff-A}
+\Qform_{A}(w)
+=\int_{\T^{3}}(Aw)\cdot(w\cdot\nabla)w\,dx
+=\frac12\int_{\T^{3}}w\cdot\nabla(w\cdot Aw)\,dx=0 ,
+\end{equation}
+the last step because $\dv w=0$.
+
+For the first-order family put $\omega=\curl w$ and $v=(w\cdot\nabla)w$.
+Since $\dv w=\dv\omega=0$,
+\begin{equation}
+\label{eq:curlconv}
+\curl v=(w\cdot\nabla)\omega-(\omega\cdot\nabla)w .
+\end{equation}
+Using self-adjointness of $\curl$ and \eqref{eq:curlconv}, for constant
+$B=B^{T}$,
+\begin{equation}
+\label{eq:suff-B}
+\begin{aligned}
+\Qform_{B\curl+\curl B}(w)
+&=\langle B\omega,v\rangle+\langle Bw,\curl v\rangle\\
+&=\langle B\omega,(w\cdot\nabla)w\rangle
+ +\langle Bw,(w\cdot\nabla)\omega\rangle
+ -\langle Bw,(\omega\cdot\nabla)w\rangle .
+\end{aligned}
+\end{equation}
+By symmetry of $B$ the first two terms are together
+$\int(w\cdot\nabla)(w\cdot B\omega)\,dx$, which vanishes because $\dv w=0$.
+The third is
+\begin{equation}
+\label{eq:suff-B2}
+-\frac12\int_{\T^{3}}\omega\cdot\nabla(w\cdot Bw)\,dx=0 ,
+\end{equation}
+because $\dv\omega=0$. Hence $\Qform_{A+B\curl+\curl B}\equiv0$ for all
+constant symmetric $A,B$, which is the sufficiency half of Theorem~A, and by
+\eqref{eq:zeromean}--\eqref{eq:commute} also of Theorem~A$^{0}$.
+
+When $A=cI$, \eqref{eq:suff-A} is the kinetic-energy cancellation; when
+$B=bI$, \eqref{eq:suff-B} is the helicity cancellation, with the normalization
+$B\curl+\curl B=2b\curl$.
+
+\section{Triad reduction}
+\label{sec:triad}
+
+\subsection{Isolating a complex triad coefficient}
+\label{subsec:phase}
+
+Real test fields carry a reality constraint, so it is not immediate that they
+see the full complex triad coefficient of a possibly non-Hermitian symbol.
+They do, and the mechanism is a two-element phase family.
+
+\begin{lemma}[polarization by the phases $1$ and $i$]
+\label{lem:phase}
+Let $p+q+r=0$ be a non-collinear lattice triad and choose real transverse
+polarizations $A_{0}\perp p$, $U\perp q$, $V\perp r$. Define the complex triad
+coefficient
+\begin{equation}
+\label{eq:triadcoeff}
+\begin{aligned}
+\mathfrak T_{R}(p,q,r;A_{0},U,V)=i\bigl[{}
+&R(p)A_{0}\cdot\bigl((U\cdot r)V+(V\cdot q)U\bigr)\\
+{}+{}&R(q)U\cdot\bigl((V\cdot p)A_{0}+(A_{0}\cdot r)V\bigr)\\
+{}+{}&R(r)V\cdot\bigl((A_{0}\cdot q)U+(U\cdot p)A_{0}\bigr)
+\bigr].
+\end{aligned}
+\end{equation}
+For phases $\alpha,\beta,\gamma\in\C$ let $w$ be the real six-mode field
+determined by
+$\widehat w(p)=\alpha A_{0}$, $\widehat w(q)=\beta U$,
+$\widehat w(r)=\gamma V$ and $\widehat w(-k)=\overline{\widehat w(k)}$. Then
+\begin{equation}
+\label{eq:Qphase}
+\Qform_{R}(w)
+=2\operatorname{Re}\bigl(\alpha\beta\gamma\,
+\mathfrak T_{R}(p,q,r;A_{0},U,V)\bigr).
+\end{equation}
+Consequently, if $\Qform_{R}$ vanishes for the two phase products
+$\alpha\beta\gamma=1$ and $\alpha\beta\gamma=i$, then
+\[
+\mathfrak T_{R}(p,q,r;A_{0},U,V)=0 .
+\]
+\end{lemma}
+
+\begin{proof}
+Expanding the Fourier coefficient of $(w\cdot\nabla)w$ and grouping the terms
+by recipient mode gives the three summands in \eqref{eq:triadcoeff}. It remains
+to check that no other signed zero-sum triple contributes.
+
+Non-collinearity means $p\times q\ne0$, so $p,q,r$ are nonzero and pairwise
+non-collinear: if for instance $p\parallel r$, then $q=-p-r\parallel p$, a
+contradiction. Consider any three modes from $\{\pm p,\pm q,\pm r\}$ summing to
+zero. If an unoriented mode is repeated, then either an opposite pair cancels
+and leaves a nonzero third mode, or the relation has the form $\pm2x\pm y=0$
+or $\pm3x=0$; all alternatives are impossible by nonvanishing and pairwise
+non-collinearity. So the three unoriented modes are $p,q,r$. Writing their
+signs as $\varepsilon,\eta,\theta\in\{\pm1\}$ and using $r=-p-q$ gives
+\[
+(\varepsilon-\theta)p+(\eta-\theta)q=0 ,
+\]
+and linear independence of $p,q$ forces $\varepsilon=\eta=\theta$. Hence the
+only signed zero-sum triples are permutations of $(p,q,r)$ and $(-p,-q,-r)$.
+The positive triad contributes $\alpha\beta\gamma\mathfrak T_{R}$ and, by
+reality compatibility, the negative one contributes its complex conjugate;
+their sum is \eqref{eq:Qphase}.
+
+Writing $\mathfrak T_{R}=x+iy$, the phase product $1$ gives $2x=0$ and the
+phase product $i$ gives $-2y=0$.
+\end{proof}
+
+For a fixed polarization triple the eight choices
+$(\alpha,\beta,\gamma)\in\{1,i\}^{3}$ used by the certificate programs have
+total products in $\{1,i,-1,-i\}$; they are redundant up to row sign and span
+exactly the same two real constraints as the products $1$ and $i$.
+
+Lemma~\ref{lem:phase} is the reason a non-Hermitian symbol is detectable at
+all: the skew-adjoint sector contributes to \eqref{eq:intro-Q}, even though it
+would be invisible in a real quadratic form.
+
+\subsection{The raw recipient map}
+\label{subsec:raw}
+
+The convective output received at the mode $p$, up to a fixed nonzero scalar,
+is
+\begin{equation}
+\label{eq:rawN}
+N_{q,r}(U,V)=(U\cdot r)V+(V\cdot q)U .
+\end{equation}
+
+\begin{lemma}[raw image line and two-triad determination]
+\label{lem:rawline}
+Let $p+q+r=0$ be non-collinear and suppose $D$ satisfies the universal
+cancellation \eqref{eq:universal} and vanishes at $q$ and at $r$. Then
+\begin{equation}
+\label{eq:imageline}
+D(p)\bigl(p_{\C}^{\perp}\bigr)\subset\spn_{\C}\{r-q\} .
+\end{equation}
+One raw triad therefore has real rank eight on the twelve-parameter target
+block. If a second known-parent triad at the same recipient has difference
+direction not parallel to $r-q$, the two triads force $D(p)=0$ and their
+stacked target block has real rank twelve.
+\end{lemma}
+
+\begin{proof}
+Put $z=q\times r$, $Z=|z|$ and $Jx=z\times x$, and write
+$U=u_{0}z+\alpha Jq$, $V=v_{0}z+\beta Jr$. A direct computation gives
+\begin{equation}
+\label{eq:Nexplicit}
+N_{q,r}(U,V)
+=Z^{2}\bigl[(\alpha v_{0}-\beta u_{0})z+\alpha\beta J(r-q)\bigr],
+\end{equation}
+so that
+\begin{equation}
+\label{eq:Nrange}
+\range N_{q,r}=\spn\{z,J(r-q)\} .
+\end{equation}
+Since $z\times J(r-q)=-Z^{2}(r-q)$, the orthogonal complement of this range is
+exactly $\spn\{r-q\}$.
+
+Lemma~\ref{lem:phase}, with the two parent terms in \eqref{eq:triadcoeff}
+equal to zero, gives
+\begin{equation}
+\label{eq:rawconstraint}
+D(p)A_{0}\cdot N_{q,r}(U,V)=0
+\end{equation}
+for all polarizations, which is \eqref{eq:imageline}.
+
+A general complex $3\times2$ target block has twelve real parameters. One raw
+triad imposes rank eight and leaves the four-real-dimensional family
+\begin{equation}
+\label{eq:residual}
+D(p)=(r-q)\otimes\ell,
+\qquad
+\ell:p_{\C}^{\perp}\to\C .
+\end{equation}
+If a second known-parent decomposition of the same target produces an image
+line not parallel to $r-q$, the two conditions \eqref{eq:imageline} intersect
+only at zero, so $D(p)=0$ and the stacked block has rank twelve.
+\end{proof}
+
+\subsection{Leray projection and the isosceles defect}
+\label{subsec:projected}
+
+In the solenoidal class the recipient is projected:
+\begin{equation}
+\label{eq:projN}
+N_{p}(U,V)=P_{p^{\perp}}\bigl[(U\cdot r)V+(V\cdot q)U\bigr].
+\end{equation}
+
+\begin{lemma}[projected one-triad determination]
+\label{lem:projected}
+Suppose $D$ is solenoidal, satisfies \eqref{eq:universal}, and vanishes at $q$
+and at $r$. If $|q|\ne|r|$, then $D(p)=0$. If $|q|=|r|$, the target ranks are
+exactly four for an arbitrary complex solenoidal block and three for a
+Hermitian block.
+\end{lemma}
+
+\begin{proof}
+With the notation of Lemma~\ref{lem:rawline}, the choices $(U,V)=(z,Jr)$ and
+$(U,V)=(Jq,Jr)$ give
+\begin{equation}
+\label{eq:twooutputs}
+N_{p}=-|z|^{2}z,
+\qquad
+N_{p}=|z|^{2}P_{p^{\perp}}J(r-q).
+\end{equation}
+The second vector has a nonzero in-plane component precisely when
+\begin{equation}
+\label{eq:inplane}
+J(r-q)\cdot Jp=|z|^{2}\bigl(|q|^{2}-|r|^{2}\bigr)\ne0 .
+\end{equation}
+So if $|q|\ne|r|$ the two outputs span $p^{\perp}$ and determine all eight
+real parameters of an arbitrary complex $2\times2$ target symbol. If
+$|q|=|r|$, the projected range is only $\spn\{z\}$: one complex output row is
+annihilated and the other remains free.
+
+Concretely, in an orthonormal output basis whose first vector is parallel to
+$z$, the unequal-length case tests both complex output rows of $D(p)$, while
+the equal-length case tests only the first. The latter gives two complex,
+hence four real, constraints on a general block. For a Hermitian block the
+first row consists of one real diagonal entry and one arbitrary complex
+off-diagonal entry, hence three real constraints.
+\end{proof}
+
+The exact local ranks are therefore
+\begin{equation}
+\label{eq:localranks}
+\begin{array}{c|c|c}
+&|q|\ne|r|&|q|=|r|\\ \hline
+\text{arbitrary complex solenoidal block}&8&4\\
+\text{Hermitian solenoidal block}&4&3 .
+\end{array}
+\end{equation}
+The raw map \eqref{eq:rawN} has no isosceles degeneracy at all. Equal parent
+lengths become exceptional only after the longitudinal direction has been
+discarded by the Leray projection. Section~\ref{sec:singular} computes the
+singular value that vanishes in the limit and shows that it is controlled by
+the logarithmic separation of the two parent shells.
+
+\section{Exact finite seeds}
+\label{sec:seeds}
+
+The necessity proofs begin with exact finite-dimensional certificates. Each
+script symbol block is expressed in the integer, non-normalized frame covered
+by Lemma~\ref{lem:coordinates}. Test fields use two integer transverse basis
+polarizations at each mode, the phase choices described after
+Lemma~\ref{lem:phase}, and conjugate negative-mode amplitudes. Expanding
+\eqref{eq:intro-Q} produces a real rational matrix in the symbol parameters,
+and Lemma~\ref{lem:coordinates} transfers its rank and nullity to the
+normalized convention used here.
+
+\subsection{The solenoidal seed}
+\label{subsec:solseed}
+
+Use the seven unoriented Boolean modes
+\begin{equation}
+\label{eq:boolean}
+\mathcal B_{7}=
+\{e_{1},e_{2},e_{3},e_{1}+e_{2},e_{1}+e_{3},e_{2}+e_{3},e_{1}+e_{2}+e_{3}\}.
+\end{equation}
+A general complex $2\times2$ block has eight real parameters, so the seed
+symbol space has dimension $56$. Write $\mathsf M_{\mathcal B_{7}}$ for the
+resulting exact matrix. It has
+\begin{equation}
+\label{eq:solseedrank}
+720\text{ nonzero rows},
+\qquad
+\rank=54,
+\qquad
+\nullity=2 .
+\end{equation}
+A fixed $54\times54$ minor has determinant residues
+\begin{equation}
+\label{eq:solminor}
+190{,}194
+\quad\text{and}\quad
+891{,}695{,}525
+\end{equation}
+modulo $1{,}000{,}003$ and $1{,}000{,}000{,}007$ respectively. All row
+denominators lie in $\{1,2,3,6\}$, so neither prime annihilates a denominator,
+and either nonzero residue proves $\rank\ge54$ over $\Q$. The two linearly
+independent kernel vectors given by the restrictions of $I$ and $\Ck$ prove the
+matching upper bound. Rank--nullity then yields the exact kernel
+\emph{equality}
+\begin{equation}
+\label{eq:seed-kernel-sol}
+\ker\mathsf M_{\mathcal B_{7}}
+=\Bigl\{
+\bigl(\left.(cI+d\Ck)\right|_{\kperp}\bigr)_{k\in\mathcal B_{7}\cup(-\mathcal B_{7})}
+:c,d\in\R
+\Bigr\}.
+\end{equation}
+Consequently every reality-compatible solenoidal symbol annihilating the seed
+tests agrees on the signed seed with one and only one symbol $cI+d\Ck$.
+
+In the Hermitian subclass the same seed gives
+\begin{equation}
+\label{eq:hermseed}
+592\text{ nonzero rows},
+\qquad
+28\text{ parameters},
+\qquad
+\rank=26 .
+\end{equation}
+Since $I$ and $\Ck$ are Hermitian, rank $26$ and nullity $2$ give the same
+kernel \eqref{eq:seed-kernel-sol} restricted to the Hermitian parameter space,
+so the Hermitian seed determines the same unique pair $c,d$.
+
+An exhaustive exact search through all $4{,}095$ subsets of one through six
+modes of the coordinate unit cube shows that none attains the required
+Hermitian rank $4M-2$. Exactly four seven-mode subsets attain rank $26$: the
+nonzero subset sums of $e_{1},\pm e_{2},\pm e_{3}$, modulo total sign. This is
+minimality within a finite domain only, and is not a statement about arbitrary
+six-mode configurations elsewhere in the lattice.
+
+\subsection{The unrestricted-output seed}
+\label{subsec:rawseed}
+
+Use the full coordinate unit cube
+\begin{equation}
+\label{eq:unitcube}
+\Lambda_{1}=\{k\in\Z^{3}\setminus\{0\}:|k_{j}|\le1\},
+\end{equation}
+which contains thirteen modes modulo total sign. A general complex $3\times2$
+block has twelve real parameters, so the parameter space has dimension $156$.
+Enumerating the $44$ non-collinear triads up to ordering and total sign gives an
+integer matrix
+\begin{equation}
+\label{eq:M1}
+\mathsf M_{1}\in\Z^{680\times156},
+\qquad
+\rank\mathsf M_{1}=144,
+\qquad
+\nullity\mathsf M_{1}=12 .
+\end{equation}
+The twelve explicit generators obtained from bases of $\Sym(3,\R)$ for $A$ and
+$B$ are linearly independent and annihilate every row, so rank--nullity again
+gives an exact kernel equality,
+\begin{equation}
+\label{eq:seed-kernel-raw}
+\ker\mathsf M_{1}
+=\Bigl\{
+\bigl(\left.(A+B\Ck+\Ck B)\right|_{\kperp}\bigr)_{k\in\Lambda_{1}}
+:A,B\in\Sym(3,\R)
+\Bigr\}.
+\end{equation}
+Proposition~\ref{prop:uniqueness} uses only the signed coordinate-axis modes,
+which belong to $\Lambda_{1}$, so the matrices $A,B$ in
+\eqref{eq:seed-kernel-raw} are unique. Thus every unrestricted-output symbol
+annihilating the unit-cube tests agrees there with one and only one generator
+of the form \eqref{eq:generator}.
+
+A fixed $144\times144$ minor has residues
+\begin{equation}
+\label{eq:rawminor}
+272{,}144
+\quad\text{and}\quad
+290{,}707{,}620
+\end{equation}
+modulo the same two primes. An independent convolution-first implementation
+reconstructs the $680$ rows and fixes the canonical digest
+\begin{center}
+\texttt{a4fc3b45a6fc94defd38d992dbbe27f4413254b3af307e41d1c7e25839e9c30d}
+\end{center}
+(SHA-256 of the canonically ordered row data).
+
+The seven-mode Boolean seed does \emph{not} suffice in this larger class: it
+has $84$ parameters, rank $66$ and nullity $18$. The six additional
+finite-network freedoms disappear on the full unit cube. This is a concrete
+illustration of the difference between invariants of a restricted triad
+network and universal ones.
+
+\subsection{Certificate summary}
+\label{subsec:certsummary}
+
+\begin{center}
+\begin{tabular}{lrrrrr}
+\hline
+Class & Seed & Parameters & Nonzero rows & Rank & Kernel\\
+\hline
+Hermitian, solenoidal output & $7$ modes & $28$ & $592$ & $26$ & $2$\\
+Complex, solenoidal output & $7$ modes & $56$ & $720$ & $54$ & $2$\\
+Complex, unrestricted output & $13$ modes & $156$ & $680$ & $144$ & $12$\\
+\hline
+\end{tabular}
+\end{center}
+
+The construction above records the mathematical generation of these matrices
+and the modular-minor argument used in the proof. The programs are a
+reproducible certificate; the finite objects, and the implication from their
+ranks to the theorems, are stated here explicitly and do not depend on reading
+the code.
+
+\section{Propagation and proofs of the classification theorems}
+\label{sec:propagation}
+
+Throughout this section we use the target/parent/recipient convention
+\eqref{eq:targetconv}: the new mode is $t=q+r$, the recipient at which the
+local lemmas act is $p=-t$, and reality transports $D(-t)=0$ to $D(t)=0$.
+
+\subsection{Solenoidal one-triad propagation}
+\label{subsec:solprop}
+
+By the kernel identity \eqref{eq:seed-kernel-sol} there is a unique $cI+d\Ck$
+agreeing with $R$ on $\mathcal B_{7}\cup(-\mathcal B_{7})$. Subtract it and
+call the difference $D$, so that $D$ is a reality-compatible solenoidal symbol
+satisfying \eqref{eq:universal} and vanishing on the fourteen signed seed
+modes. We show $D\equiv0$.
+
+Six unequal-length steps recover the missing unit-cube modes. First
+\begin{equation}
+\label{eq:boot1}
+\begin{aligned}
+e_{1}+e_{2}-e_{3}&=(e_{1}+e_{2})-e_{3},\\
+e_{1}-e_{2}+e_{3}&=(e_{1}+e_{3})-e_{2},\\
+e_{1}-e_{2}-e_{3}&=e_{1}-(e_{2}+e_{3}),
+\end{aligned}
+\end{equation}
+whose parents have squared lengths $2$ and $1$; then
+\begin{equation}
+\label{eq:boot2}
+\begin{aligned}
+e_{1}-e_{2}&=(e_{1}-e_{2}+e_{3})-e_{3},\\
+e_{1}-e_{3}&=(e_{1}-e_{2}-e_{3})+e_{2},\\
+e_{2}-e_{3}&=(e_{1}+e_{2}-e_{3})-e_{1},
+\end{aligned}
+\end{equation}
+whose parents have squared lengths $3$ and $1$. In each equality the left-hand
+side is the target $t$ and the two right-hand vectors are $q,r$; the parents
+are non-collinear with distinct lengths, so Lemma~\ref{lem:projected} gives
+$D(-t)=0$, and reality gives $D(t)=0$. Permuting coordinates covers the
+remaining unit-cube classes.
+
+All axis modes follow from
+\begin{equation}
+\label{eq:axis1}
+2e_{i}+e_{j}=e_{i}+(e_{i}+e_{j}),
+\qquad
+2e_{i}=(2e_{i}+e_{j})-e_{j},
+\end{equation}
+and inductively, for $n\ge2$,
+\begin{equation}
+\label{eq:axis2}
+(n+1)e_{i}+e_{j}=ne_{i}+(e_{i}+e_{j}),
+\qquad
+(n+1)e_{i}=\bigl((n+1)e_{i}+e_{j}\bigr)-e_{j}.
+\end{equation}
+Again each left-hand side is a target and each right-hand side its known-parent
+decomposition, with non-collinear parents of distinct lengths.
+
+For a remaining non-axis target $t$ outside the recovered coordinate unit
+cube, so that $|t|_{1}\ge3$, induct on $|t|_{1}$. Choose a nonzero coordinate,
+set $s=\sgn(t_{j})e_{j}$, and write
+\begin{equation}
+\label{eq:generalstep}
+t=(t-s)+s .
+\end{equation}
+For example, $t=(2,1,0)$ is obtained from $(1,1,0)+e_{1}$; the same
+construction applies to every non-axis target. Indeed, $t-s$ has
+$\ell^{1}$-norm $|t|_{1}-1\ge2$, so its squared Euclidean norm is at least
+$2$, while $|s|^{2}=1$. The two parents are non-collinear: $t$ has a nonzero
+coordinate other than the one used to define $s$, and that coordinate remains
+in $t-s$. Thus the parents have distinct lengths and Lemma~\ref{lem:projected}
+at $p=-t$ determines $D(-t)$; reality determines $D(t)$. Since the parents
+lie in earlier $\ell^{1}$-shells or in the recovered seed, this is a genuine
+induction. It reaches every non-axis mode, and together with the axis steps
+above proves $D\equiv0$ and $R=cI+d\Ck$. This proves Corollary~B directly,
+without passing through Theorem~A.
+
+\subsection{Raw two-triad propagation, and the proof of Theorem~A}
+\label{subsec:rawprop}
+
+For Theorem~A the kernel identity \eqref{eq:seed-kernel-raw} supplies the
+unique generator \eqref{eq:generator} agreeing with $R$ on the unit cube.
+Subtract it and again call the difference $D$, a reality-compatible symbol with
+unrestricted output that satisfies \eqref{eq:universal} and vanishes on
+$\Lambda_{1}\cup(-\Lambda_{1})$.
+
+Induct on $|t|_{1}$, starting at shell $3$: every non-axis mode in shells $1$
+and $2$ already lies in the coordinate unit cube. Within each shell, process
+all non-axis targets before the axis targets.
+
+Let $t$ be a non-axis target with $|t|_{1}=n\ge3$, choose two nonzero
+coordinates $i,j$, and set $s_{i}=\sgn(t_{i})e_{i}$, $s_{j}=\sgn(t_{j})e_{j}$.
+Use the two parent decompositions
+\begin{equation}
+\label{eq:twoparents}
+t=(t-s_{i})+s_{i}=(t-s_{j})+s_{j}.
+\end{equation}
+Here $t-s_{i}$ and $t-s_{j}$ lie in shell $n-1$ while $s_{i},s_{j}$ lie in the
+unit cube, so all four parents are already known; each pair is non-collinear
+because $t$ has another nonzero coordinate. At the common recipient $p=-t$,
+the two surviving image lines from \eqref{eq:imageline} have directions
+\begin{equation}
+\label{eq:difdirs}
+d_{i}=2s_{i}-t,
+\qquad
+d_{j}=2s_{j}-t .
+\end{equation}
+They are non-parallel. Indeed, if $t$ has a third nonzero coordinate,
+comparison in that coordinate forces the proportionality factor to be one,
+whereas the $i$ coordinate would then require
+$2\sgn(t_{i})-t_{i}=-t_{i}$, which is impossible. If $t$ has exactly two
+nonzero coordinates, of magnitudes $a,b$, then
+\[
+d_{i}\times d_{j}=2(2-a-b)\,s_{i}\times s_{j}\ne0
+\]
+because $a+b=|t|_{1}\ge3$. By Lemma~\ref{lem:rawline} the two raw triads force
+$D(-t)=0$, and reality gives $D(t)=0$.
+
+Once the non-axis part of shell $n$ is known, take the positive axis target
+$t=ne_{i}$ with $n\ge2$ and use
+\begin{equation}
+\label{eq:axisraw}
+\begin{aligned}
+ne_{i}&=\bigl((n-1)e_{i}+e_{j}\bigr)+(e_{i}-e_{j}),\\
+ne_{i}&=\bigl((n-1)e_{i}+e_{\ell}\bigr)+(e_{i}-e_{\ell}),
+\end{aligned}
+\end{equation}
+with $j\ne\ell$ both different from $i$. Here $(n-1)e_{i}+e_{j}$ and
+$(n-1)e_{i}+e_{\ell}$ are non-axis modes of the current shell, already handled,
+while $e_{i}-e_{j}$ and $e_{i}-e_{\ell}$ belong to the unit cube. Hence every
+parent in \eqref{eq:axisraw} is known at this stage, including when $n=2$. The
+difference directions
+\[
+(2-n)e_{i}-2e_{j},
+\qquad
+(2-n)e_{i}-2e_{\ell}
+\]
+are non-parallel, so Lemma~\ref{lem:rawline} at $p=-ne_{i}$ gives
+$D(-ne_{i})=0$ and reality gives $D(ne_{i})=0$; the negative axis mode follows
+simultaneously. This completes the induction, so $D\equiv0$ and
+\eqref{eq:generator} holds. Together with Section~\ref{sec:sufficiency} and
+Proposition~\ref{prop:uniqueness}, Theorem~A is proved, and with
+\eqref{eq:zeromean}--\eqref{eq:commute} so is Theorem~A$^{0}$.
+
+\subsection{Coverage check for the propagation routes}
+\label{subsec:propcheck}
+
+The case distinctions above can be checked independently of the rank
+certificates. For the solenoidal route, the bootstrap identities recover the
+three missing body diagonals and then the three missing face diagonals of the
+unit cube. The axis identities recover each positive axis in increasing
+$\ell^{1}$-order, and the general step recovers every target with at least two
+nonzero coordinates. Its parents have $\ell^{1}$-norm one and one less than
+that of the target, so the induction is well founded. Signs are transported by
+reality. For the raw route, every non-axis target has at least two nonzero
+coordinates and therefore admits the two decompositions in
+\eqref{eq:twoparents}; after these targets are processed, the decompositions in
+\eqref{eq:axisraw} recover each axis. Thus no target is omitted by either
+ordering.
+
+As an exact finite audit of these assertions, the verification programs replay
+both orderings in the coordinate box $|k_j|\le10$. The solenoidal replay
+reaches all $9{,}260$ signed nonzero modes. The raw replay checks all $4{,}617$
+target blocks, verifies that both parent pairs are known when used, and checks
+that the two difference directions have nonzero cross product and that the
+stacked target block has exact rank twelve in every case. These computations
+are finite checks of the stated formulas; the preceding inductions extend the
+argument from the checked box to all of $\Z^{3}\setminus\{0\}$.
+
+\subsection{Structural comparison}
+\label{subsec:comparison}
+
+The two propagation arguments are summarized by one geometric dichotomy:
+\begin{equation}
+\label{eq:dichotomy}
+\begin{array}{c|c|c}
+\text{output}&\text{one triad leaves}&\text{what kills the target}\\ \hline
+\C^{3}&\text{one complex image line}&\text{a second non-parallel line}\\
+p^{\perp}&\text{no freedom if }|q|\ne|r|&\text{one unequal-length triad}.
+\end{array}
+\end{equation}
+Projection makes generic propagation stronger --- one triad suffices instead of
+two --- but it creates the exact isosceles defect, which is the subject of
+Section~\ref{sec:singular}.
+
+\subsection{Proof of Theorem~D}
+\label{subsec:thmDproof}
+
+Definitions~\ref{def:unequal} and \ref{def:twotriad} isolate exactly what the
+preceding inductions use.
+
+For an unequal-triad ordering, exact elimination selects $54$ independent rows
+on the complex solenoidal seed. At each later target, Lemma~\ref{lem:projected}
+supplies eight rows whose restriction to the new target block has rank eight.
+Ordering rows and columns by propagation makes the matrix block lower
+triangular, of rank
+\begin{equation}
+\label{eq:count8}
+54+8(M-7)=8M-2 .
+\end{equation}
+Restricting the same construction to Hermitian blocks selects $26$ seed rows
+and four rows at each later target, giving rank
+\begin{equation}
+\label{eq:count4}
+26+4(M-7)=4M-2 ,
+\end{equation}
+which proves clause 2 as the Hermitian specialization of the same triangular
+construction.
+
+For a two-triad ordering, select the $144$ independent unit-cube rows. The two
+non-parallel image lines at each subsequent target supply a rank-twelve
+diagonal block, so the total rank is
+\begin{equation}
+\label{eq:count12}
+144+12(M-13)=12M-12 .
+\end{equation}
+
+All selected fields are supported in $\Lambda$ by the corresponding ordering
+definition. The energy--helicity plane lies in the kernel of the first two
+matrices and the twelve symbols \eqref{eq:generator} lie in the kernel of the
+third, so the displayed ranks give exactly those kernels. Conversely, one real
+field evaluation supplies at most one real linear equation, so the parameter
+dimensions $8M$, $4M$, $12M$ and the kernel dimensions $2$, $2$, $12$ give the
+matching lower bounds. This proves Theorem~D.
+
+For a coordinate box $\Lambda_{N}$, the bootstrap steps
+\eqref{eq:boot1}--\eqref{eq:boot2}, the axis steps
+\eqref{eq:axis1}--\eqref{eq:axis2} and the induction \eqref{eq:generalstep} all
+remain inside $\Lambda_{N}$ and give an unequal-triad ordering; the two-parent
+construction \eqref{eq:twoparents}--\eqref{eq:axisraw} likewise remains inside
+$\Lambda_{N}$ and gives a two-triad ordering. Counting unoriented modes gives
+\eqref{eq:boxcount} and hence \eqref{eq:boxtests}. Finite symmetric sets
+without one of these orderings lie outside the theorem.
+
+\section{Singular values and quantitative rigidity}
+\label{sec:singular}
+
+Set
+\[
+\lambda=|q|^{2},
+\quad
+\mu=|r|^{2},
+\quad
+\kappa=|p|^{2},
+\quad
+z=q\times r,
+\quad
+Z=|z|,
+\quad
+Jv=z\times v .
+\]
+All singular values in Sections~\ref{subsec:rawspec}--\ref{subsec:routes} are
+\emph{local}: they refer to the Euclidean structures induced by orthonormal
+frames and unit tensor-product polarizations, for the maps
+\begin{equation}
+\label{eq:localmaps}
+\mathsf L^{\mathrm{raw}}_{p;q,r}(U\otimes V)
+=(U\cdot r)V+(V\cdot q)U,
+\qquad
+\mathsf L^{\mathrm{sol}}_{p;q,r}
+=P_{p^{\perp}}\mathsf L^{\mathrm{raw}}_{p;q,r} .
+\end{equation}
+Their singular spectra are invariant under orthonormal changes of basis.
+Lemma~\ref{lem:coordinates} explains why the non-normalized certificate
+coordinates preserve the corresponding ranks but not these numerical values.
+
+\subsection{The raw interaction spectrum}
+\label{subsec:rawspec}
+
+\begin{proposition}[raw singular spectrum]
+\label{prop:raw}
+For the unprojected map \eqref{eq:rawN}, the two nonzero squared singular
+values are
+\begin{equation}
+\label{eq:rawspec}
+\widetilde\sigma_{\mathrm n}^{2}
+=\frac{Z^{2}(\lambda+\mu)}{\lambda\mu},
+\qquad
+\widetilde\sigma_{\mathrm d}^{2}
+=\frac{Z^{2}|r-q|^{2}}{\lambda\mu} .
+\end{equation}
+Both are positive for every non-collinear triad.
+\end{proposition}
+
+\begin{proof}
+The vectors
+\[
+n=\frac zZ,
+\qquad
+t_{q}=\frac{Jq}{Z\sqrt\lambda},
+\qquad
+t_{r}=\frac{Jr}{Z\sqrt\mu},
+\qquad
+t_{d}=\frac{J(r-q)}{Z|r-q|}
+\]
+are orthonormal frames in the two parent planes and in the raw
+two-dimensional image. Formula \eqref{eq:Nexplicit}, applied first to the
+unnormalized vectors $z,Jq,Jr$, gives
+\[
+N_{q,r}(z,z)=0,
+\quad
+N_{q,r}(z,Jr)=-Z^{2}z,
+\quad
+N_{q,r}(Jq,z)=Z^{2}z,
+\quad
+N_{q,r}(Jq,Jr)=Z^{2}J(r-q).
+\]
+Hence in the ordered tensor-product input basis
+$(n\otimes n,\;n\otimes t_{r},\;t_{q}\otimes n,\;t_{q}\otimes t_{r})$ and the
+output basis $(n,t_{d})$, the raw interaction has matrix
+\begin{equation}
+\label{eq:rawmatrix}
+\begin{pmatrix}
+0&-Z/\sqrt\mu&Z/\sqrt\lambda&0\\
+0&0&0&Z|r-q|/(\sqrt\lambda\sqrt\mu)
+\end{pmatrix}.
+\end{equation}
+Its two rows are orthogonal, and their squared Euclidean norms are exactly the
+quantities in \eqref{eq:rawspec}.
+\end{proof}
+
+\subsection{The projected interaction spectrum}
+\label{subsec:projspec}
+
+\begin{proposition}[projected spectrum and target observation]
+\label{prop:projected}
+For the Leray-projected map \eqref{eq:projN}, the squared singular values are
+\begin{equation}
+\label{eq:projspec}
+\sigma_{\mathrm n}^{2}
+=\frac{Z^{2}(\lambda+\mu)}{\lambda\mu},
+\qquad
+\sigma_{\mathrm t}^{2}
+=\frac{Z^{2}(\lambda-\mu)^{2}}{\kappa\lambda\mu} .
+\end{equation}
+The projection leaves the normal channel unchanged and multiplies the second
+raw singular value by
+\begin{equation}
+\label{eq:defectfactor}
+\frac{|\lambda-\mu|}{\sqrt\kappa\,|r-q|} .
+\end{equation}
+Let $\mathsf O_{p;q,r}(D(p))$ denote the complete local target observation
+formed from the coefficients $D(p)A_{0}\cdot N_{p}(U,V)$ over orthonormal input
+polarizations. If, in the orthonormal frame $(n,t_{p})$,
+\[
+D(p)=\begin{pmatrix}a&c\\ \overline c&b\end{pmatrix},
+\qquad a,b\in\R,\ c\in\C,
+\]
+is Hermitian, then
+\begin{equation}
+\label{eq:obsnorm}
+\|\mathsf O_{p;q,r}(D(p))\|_{\mathrm F}^{2}
+=\sigma_{\mathrm n}^{2}(a^{2}+|c|^{2})
++\sigma_{\mathrm t}^{2}(b^{2}+|c|^{2}),
+\end{equation}
+and in particular
+\begin{equation}
+\label{eq:obsbound}
+\|\mathsf O_{p;q,r}(D(p))\|_{\mathrm F}
+\ge\min(\sigma_{\mathrm n},\sigma_{\mathrm t})\,\|D(p)\|_{\mathrm{HS}} .
+\end{equation}
+For an arbitrary complex solenoidal block each singular value in
+\eqref{eq:projspec} occurs with real multiplicity four in
+$\mathsf O_{p;q,r}$.
+\end{proposition}
+
+\begin{proof}
+Replace $t_{d}$ in Proposition~\ref{prop:raw} by the normalized tangent vector
+$t_{p}=Jp/(Z\sqrt\kappa)$. The identities
+\eqref{eq:twooutputs}--\eqref{eq:inplane}, together with
+\[
+N_{p}(Jq,Jr)=Z^{2}\frac{\lambda-\mu}{\kappa}Jp ,
+\]
+show that in the same input basis and the output basis $(n,t_{p})$ the
+projected interaction has matrix
+\begin{equation}
+\label{eq:projmatrix}
+\begin{pmatrix}
+0&-Z/\sqrt\mu&Z/\sqrt\lambda&0\\
+0&0&0&Z(\lambda-\mu)/(\sqrt\kappa\sqrt\lambda\sqrt\mu)
+\end{pmatrix}.
+\end{equation}
+Its rows are again orthogonal, and their squared norms give
+\eqref{eq:projspec}. Dividing the absolute value of the last entry of
+\eqref{eq:projmatrix} by the corresponding entry of \eqref{eq:rawmatrix} gives
+\eqref{eq:defectfactor}, which exhibits the isosceles defect explicitly.
+Contracting the two orthogonal output rows against the two rows of the
+Hermitian matrix $D(p)$ gives \eqref{eq:obsnorm} and hence
+\eqref{eq:obsbound}. Without the Hermitian relation each of the two complex
+rows of $D(p)$ contains two complex coordinates, and separating real and
+imaginary parts gives real multiplicity four for each singular value.
+\end{proof}
+
+These are conditional estimates on one target block with its parent blocks
+held fixed; Section~\ref{subsec:stability} explains why they do not by
+themselves control the global certificate.
+
+\subsection{Stable and unstable propagation routes}
+\label{subsec:routes}
+
+Write $\cond$ for the ratio of the larger to the smaller nonzero singular
+value.
+
+\begin{corollary}[uniform local conditioning of the explicit route]
+\label{cor:conditioning}
+Every post-seed local projected interaction block in the sparse solenoidal
+ordering of Section~\ref{subsec:solprop} satisfies the sharp bounds
+\begin{equation}
+\label{eq:sharpcond}
+\min(\sigma_{\mathrm n}^{2},\sigma_{\mathrm t}^{2})\ge\frac1{10},
+\qquad
+\cond\le\sqrt{15} .
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+The three bootstrap triads in \eqref{eq:boot1} have, up to interchanging $q$
+and $r$, $(\lambda,\mu,\kappa,Z^{2})=(1,2,3,2)$, hence
+$(\sigma_{\mathrm n}^{2},\sigma_{\mathrm t}^{2})=(3,1/3)$. The three triads in
+\eqref{eq:boot2} have $(\lambda,\mu,\kappa,Z^{2})=(3,1,2,2)$, hence
+$(\sigma_{\mathrm n}^{2},\sigma_{\mathrm t}^{2})=(8/3,4/3)$.
+
+The shifted axis modes use $q=ne_{i}$, $r=e_{i}+e_{j}$ with $n\ge1$. Direct
+substitution in \eqref{eq:projspec} gives
+\begin{equation}
+\label{eq:axisspec}
+\sigma_{\mathrm n}^{2}=\frac{n^{2}+2}{2},
+\qquad
+\sigma_{\mathrm t}^{2}=\frac{(n^{2}-2)^{2}}{2(n^{2}+2n+2)} .
+\end{equation}
+The second expression is at least $1/10$ for integers $n\ge1$, with equality at
+$n=1$ and value $1/5$ at $n=2$; for $n\ge3$, comparison with $1$ reduces to
+$n(n^{3}-6n-4)>0$, which holds at $n=3$ and is strictly increasing thereafter.
+Moreover
+\[
+15(n^{2}-2)^{2}-(n^{2}+2)(n^{2}+2n+2)
+=(n-1)(n-2)(14n^{2}+40n+28)\ge0
+\]
+for $n\ge1$, so $\sigma_{\mathrm n}^{2}/\sigma_{\mathrm t}^{2}\le15$, the cases
+$n=1,2$ being equalities of the displayed inequality.
+
+The completion of the positive axes uses $q=ne_{i}+e_{j}$, $r=-e_{j}$ with
+$n\ge2$, giving
+\begin{equation}
+\label{eq:axisspec2}
+\sigma_{\mathrm n}^{2}=\frac{n^{2}(n^{2}+2)}{n^{2}+1},
+\qquad
+\sigma_{\mathrm t}^{2}=\frac{n^{4}}{n^{2}+1} .
+\end{equation}
+Here the smaller squared singular value is at least $16/5$ and the squared
+condition number is $(n^{2}+2)/n^{2}\le3/2$.
+
+Finally consider a general non-axis step \eqref{eq:generalstep}. It chooses a
+unit vector $r$ and a parent $q$ with
+\[
+m=|q|^{2}\ge2,
+\qquad
+a=q\cdot r,
+\qquad
+d=m-a^{2}=|q\times r|^{2}\ge1,
+\qquad
+0\le a\le\sqrt m .
+\]
+Formula \eqref{eq:projspec} becomes
+\begin{equation}
+\label{eq:generalspec}
+\sigma_{\mathrm n}^{2}=\frac{d(m+1)}m,
+\qquad
+\sigma_{\mathrm t}^{2}=\frac{d(m-1)^{2}}{m(m+1+2a)} .
+\end{equation}
+The normal value exceeds $1$. If $m=2$, integrality forces $a\in\{0,1\}$ and
+the tangent value is $1/3$ or $1/10$, with squared condition number $9$ or
+$15$. If $m\ge3$, then
+\[
+\sigma_{\mathrm t}^{2}
+\ge\frac{(m-1)^{2}}{m(\sqrt m+1)^{2}}
+=\Bigl(1-\frac1{\sqrt m}\Bigr)^{2}>\frac1{10},
+\]
+while
+\[
+\frac{\sigma_{\mathrm n}^{2}}{\sigma_{\mathrm t}^{2}}
+=\frac{(m+1)(m+1+2a)}{(m-1)^{2}}
+\le\frac{m+1}{(\sqrt m-1)^{2}}
+\le4+2\sqrt3<15 .
+\]
+The penultimate expression is decreasing in $\sqrt m>1$, so its maximum for
+$m\ge3$ occurs at $m=3$ and equals $4+2\sqrt3$. This proves
+\eqref{eq:sharpcond}; both constants are attained in \eqref{eq:axisspec} at
+$n=1$, equivalently in \eqref{eq:generalspec} at $m=2$, $a=1$.
+\end{proof}
+
+Unequal parent lengths alone do not imply uniform conditioning. For
+\[
+q_{n}=(n,0,0),
+\qquad
+r_{n}=(0,n,1),
+\qquad
+p_{n}=-(q_{n}+r_{n}),
+\]
+one has $Z^{2}=n^{2}(n^{2}+1)$, $\lambda=n^{2}$, $\mu=n^{2}+1$ and
+$\kappa=2n^{2}+1$, so that \eqref{eq:projspec} yields
+\begin{equation}
+\label{eq:badfamily}
+\sigma_{\mathrm n}^{2}=2n^{2}+1,
+\qquad
+\sigma_{\mathrm t}^{2}=(2n^{2}+1)^{-1},
+\qquad
+\cond=2n^{2}+1 .
+\end{equation}
+The parents are never of equal length, yet the conditioning degenerates
+quadratically. Choosing the propagation route well is therefore a genuine
+constraint, not a formality.
+
+Finally, since
+$|\lambda-\mu|/\sqrt{\lambda\mu}
+=2|\sinh(\tfrac12\log(\mu/\lambda))|$,
+taking the square root of the second formula in \eqref{eq:projspec} gives
+\begin{equation}
+\label{eq:sinh}
+\sigma_{\mathrm t}
+=\frac{2Z}{\sqrt\kappa}
+\Bigl|\sinh\Bigl(\tfrac12\log\tfrac\mu\lambda\Bigr)\Bigr| .
+\end{equation}
+Observability of the tangential channel is thus governed by the logarithmic
+separation of the two parent shells.
+
+\subsection{A finite stability estimate}
+\label{subsec:stability}
+
+Fix the normalized frames of Section~\ref{sec:setting} and a normalization of
+the selected real test fields. Let $\mathsf A_{\Lambda}$ be the resulting
+\emph{global} certificate matrix, let $x_{R}$ be the real coordinate vector of
+the complete symbol, and let $K=\ker\mathsf A_{\Lambda}$ be the appropriate
+classified kernel.
+
+\begin{proposition}[global stability, and its distinction from local
+conditioning]
+\label{prop:stability}
+If $\gamma_{\Lambda}$ is the smallest positive singular value of
+$\mathsf A_{\Lambda}$, then
+\begin{equation}
+\label{eq:stability}
+\dist(x_{R},K)\le\gamma_{\Lambda}^{-1}\|\mathsf A_{\Lambda}x_{R}\|_{2} .
+\end{equation}
+In propagation order the rows at a new target have the schematic form
+$y_{j}=L_{j}x_{j}+\sum_{\ell<j}E_{j\ell}x_{\ell}$, where $L_{j}$ is the local
+diagonal block and the $E_{j\ell}$ carry the already encountered parent
+columns. Full rank of the seed block and of every $L_{j}$ proves the global
+rank by block triangularity. It does not bound $\gamma_{\Lambda}$ in terms of
+$\min_{j}\sigma_{\min}(L_{j})$ alone, because the off-diagonal blocks can
+accumulate earlier errors during forward substitution.
+\end{proposition}
+
+\begin{proof}
+Restrict $\mathsf A_{\Lambda}$ to $K^{\perp}$; its least singular value there
+is $\gamma_{\Lambda}$, so
+$\|\mathsf A_{\Lambda}x\|_{2}\ge\gamma_{\Lambda}\|x\|_{2}$ for
+$x\in K^{\perp}$. Applying this to the orthogonal projection of $x_{R}$ onto
+$K^{\perp}$ gives \eqref{eq:stability}. The block formula follows from the
+propagation ordering: each selected row involves its current target and only
+earlier parent blocks. Triangularity therefore proves rank, whereas the global
+least singular value depends on the complete matrix, including the
+$E_{j\ell}$.
+\end{proof}
+
+Thus, for each fixed finite certificate, approximate cancellation on its
+selected fields quantitatively forces proximity to the classified family. This
+is a finite-certificate stability estimate and nothing more: the local bounds
+\eqref{eq:sharpcond} imply neither an $N$-independent nor a polynomial bound
+for $\gamma_{\Lambda}^{-1}$, and no such global bound is claimed here. Making
+one is Problem~\ref{prob:gamma} below.
+
+\section{Strain--vorticity applications}
+\label{sec:strainvorticity}
+
+This section transports the classification through the vorticity and records
+its exact structural consequence for anisotropic second-order operators. It is
+deliberately bounded: what follows are identities, not estimates.
+
+\subsection{The curl pullback and the proof of Corollary~C}
+\label{subsec:pullback}
+
+Let $u$ be admissible, $\omega=\curl u$ and $S=\gsym u$, and let
+$T(k):\kperp\to\C^{3}$ be complex linear and reality compatible. No
+solenoidal-output assumption is imposed. With $\Dform_{T}$ as in
+\eqref{eq:Dform}, symmetry of $\omega_{i}\omega_{j}$ gives
+\[
+\Dform_{T}(u)
+=\int_{\T^{3}}\partial_{i}(Tu)_{j}\,\omega_{i}\omega_{j}\,dx ,
+\]
+and since $\partial_{i}\omega_{i}=0$, periodic integration by parts gives
+\begin{equation}
+\label{eq:byparts}
+\Dform_{T}(u)
+=-\int_{\T^{3}}(Tu)_{j}\,\omega_{i}\partial_{i}\omega_{j}\,dx
+=-\langle Tu,(\omega\cdot\nabla)\omega\rangle .
+\end{equation}
+Note that $\Dform_{T}(u)$ is \emph{not} $\langle Tu,S(u)\omega\rangle$; that
+is a different cubic form.
+
+On mean-zero solenoidal fields the curl is a bijection: for $k\ne0$ and
+$v\perp k$ one has $\Ck^{2}v=|k|^{2}v-k(k\cdot v)=|k|^{2}v$ and hence
+$\Ck^{-1}v=\Ck v/|k|^{2}$, and this inverse preserves finite support, reality
+and transversality. Setting
+\begin{equation}
+\label{eq:substitution}
+w=\omega,
+\qquad
+R=T\curl^{-1} ,
+\end{equation}
+equation \eqref{eq:byparts} becomes the exact equivalence
+\begin{equation}
+\label{eq:equivalence}
+\Dform_{T}(u)=-\Qform_{R}(w) .
+\end{equation}
+The minus sign and the single factor $|k|^{-2}$ are both essential. No growth
+condition on either symbol is needed, because the tests are finite Fourier
+sums.
+
+\begin{proof}[Proof of Corollary~C]
+As $u$ ranges over admissible fields, $w=\curl u$ ranges over all admissible
+fields, so by \eqref{eq:equivalence} the cancellation $\Dform_{T}\equiv0$ is
+equivalent to $\Qform_{R}\equiv0$ for $R=T\curl^{-1}$. Theorem~A gives
+$R=A+B\curl+\curl B$ with unique constant real symmetric $A,B$. Composing on
+the right with $\curl$ and using $\curl^{2}=-\Delta$ on the mean-zero
+solenoidal space gives
+\[
+T=A\curl+B(-\Delta)+\curl B\curl ,
+\]
+which is \eqref{eq:Tfamily}; uniqueness is inherited from Theorem~A and the
+invertibility of the curl. This is a bijective pullback of the
+classification, not an extra condition forcing $A$ or $B$ to be scalar.
+
+If $T$ has solenoidal output then so does $R=T\curl^{-1}$, and Corollary~B
+gives $R=cI+d\curl$, hence $T=c\curl+d(-\Delta)$, which is \eqref{eq:Tsol}.
+Conversely these operators preserve divergence-free output and satisfy the
+cancellation. Formula \eqref{eq:Tsol} requires the range assumption;
+\eqref{eq:Tfamily} does not.
+\end{proof}
+
+Taking $T=-\Delta$ in \eqref{eq:Tsol} recovers Miller's scalar Laplacian
+identity~\cite{Miller2026}
+\begin{equation}
+\label{eq:miller}
+\langle-\Delta S,\omega\otimes\omega\rangle=0 .
+\end{equation}
+It does \emph{not} give $\langle S,\omega\otimes\omega\rangle=0$: the field
+\[
+u=2(0,1,1)\cos x+2(1,0,0)\cos y-2(1,-1,1)\sin(x+y)
+\]
+is real, mean zero and divergence free, and satisfies
+$\int\omega^{T}S\omega=-2$ in normalized measure. Corollary~C therefore says
+that, within the reality-compatible translation-invariant multiplier class on
+$\T^{3}$ and for the universal test family, no scalar, anisotropic,
+matrix-valued, nonlocal or non-self-adjoint solenoidal Fourier multiplier
+outside $\spn\{\curl,-\Delta\}$ creates a new universal strain--vorticity
+cancellation.
+
+For the quadratic strain energy
+\begin{equation}
+\label{eq:strainenergy}
+\mathcal E_{T}(u)
+=\tfrac12\langle S,\gsym(Tu)\rangle
+=\tfrac14\langle-\Delta u,Tu\rangle ,
+\end{equation}
+call $T$ coercive when there is $c_{0}>0$ such that
+$\mathcal E_{T}(u)\ge c_{0}\|u\|_{\dot H^{2}}^{2}$ for every admissible $u$.
+Within the classified solenoidal family, the complete coercive cone on the
+mean-zero $2\pi$-torus is
+\begin{equation}
+\label{eq:cone}
+T=a(-\Delta)+b\curl,
+\qquad
+a>|b| .
+\end{equation}
+Indeed, on a helical Fourier mode the curl eigenvalue is
+$\pm|k|$, so the contribution to \eqref{eq:strainenergy} is
+\[
+\frac14|k|^{2}\bigl(a|k|^{2}\pm b|k|\bigr)|\widehat u(k)|^{2}.
+\]
+Because every nonzero lattice frequency satisfies $|k|\ge1$, uniform
+positivity relative to $|k|^{4}|\widehat u(k)|^{2}$ is equivalent to
+$a>|b|$; necessity is already witnessed by the two helicities at
+$|k|=1$. This is algebraic coercivity together with cancellation of one
+nonlinear channel. It is not a closed PDE estimate.
+
+\subsection{Anisotropic longitudinal completion}
+\label{subsec:anisotropic}
+
+The unrestricted family \eqref{eq:Tfamily} answers a question the solenoidal
+one cannot: given an arbitrary constant-coefficient anisotropic scalar
+second-order operator, what must be added to it to restore the universal
+strain--vorticity cancellation?
+
+For a real symmetric matrix $H$ set
+\begin{equation}
+\label{eq:Hcorrespondence}
+B_{H}=\frac{\tr H}{2}I-H,
+\qquad
+L_{H}=-\sum_{i,j}H_{ij}\partial_{i}\partial_{j},
+\qquad
+\Phi_{H}(u)=\dv(B_{H}u).
+\end{equation}
+The correspondence is invertible, with inverse $H=(\tr B)I-B$; the two
+formulas are different, and $H\mapsto B_{H}$ is not an involution on
+$\Sym(3,\R)$.
+
+\begin{corE}[anisotropic longitudinal completion]
+\label{cor:E}
+Let $H\in\Sym(3,\R)$ and put $T_{B}=B(-\Delta)+\curl B\curl$. Then on
+divergence-free fields
+\begin{equation}
+\label{eq:bridge}
+T_{B_{H}}u=L_{H}u-\nabla\Phi_{H}(u),
+\qquad
+PT_{B_{H}}u=L_{H}u ,
+\end{equation}
+and $B_{H}$ is the unique symmetric matrix with this property. Consequently
+every constant-coefficient anisotropic scalar second-order operator has a
+unique homogeneous second-order completion of the form $T_{B}$ inside the
+classified family, and the completed operator
+satisfies
+\begin{equation}
+\label{eq:completed}
+\bigl\langle
+\gsym\bigl(L_{H}u-\nabla\Phi_{H}(u)\bigr),\omega\otimes\omega
+\bigr\rangle=0 ,
+\end{equation}
+and the defect of the bare anisotropic operator is exactly longitudinal:
+\begin{equation}
+\label{eq:defect}
+\langle L_{H}S,\omega\otimes\omega\rangle
+=\langle\nabla^{2}\Phi_{H}(u),\omega\otimes\omega\rangle .
+\end{equation}
+\end{corE}
+
+\begin{proof}
+A coordinate expansion for symmetric $B$ gives, for \emph{every} vector $v$,
+\begin{equation}
+\label{eq:symbolidentity}
+(B\Ck+\Ck B)\Ck v=(k^{T}Hk)v-(Hk\cdot v)k,
+\qquad H=(\tr B)I-B .
+\end{equation}
+On $v\perp k$ the left-hand side is $|k|^{2}Bv+\Ck B\Ck v$, which is the
+symbol of $T_{B}$. One must not replace $\Ck B\Ck v$ by
+$|k|^{2}Bv-k(k\cdot Bv)$: that purported matrix triple-product identity is
+false. For instance with $H=\mathrm{diag}(1,2,3)$, so
+$B_{H}=\mathrm{diag}(2,1,0)$, and $k=e_{1}$, $v=e_{2}$, one has
+$\Ck B_{H}\Ck v=0$. Hence the actual full left-hand side of
+\eqref{eq:symbolidentity} is
+$B_{H}\Ck^{2}v+\Ck B_{H}\Ck v=e_{2}$. Replacing only the second summand by
+the incorrect expression would instead make the full left-hand side equal to
+$e_{2}+e_{2}=2e_{2}$, while the right-hand side of
+\eqref{eq:symbolidentity} is $e_{2}$. Thus the proposed replacement fails
+when like quantities are compared.
+
+For transverse $v$, symmetry and $B_{H}=(\tr H/2)I-H$ give
+$k\cdot B_{H}v=-Hk\cdot v$, so \eqref{eq:symbolidentity} reads
+$T_{B_{H}}u=L_{H}u-\nabla\Phi_{H}(u)$ in physical space, and applying the
+Leray projection $P$ kills the gradient. This is \eqref{eq:bridge}.
+
+For uniqueness, suppose two completions have the same projection and let $G$
+be the difference of the corresponding $H$ matrices. Formula
+\eqref{eq:symbolidentity} gives $(k^{T}Gk)v=0$ for every nonzero lattice $k$
+and every $v\perp k$. Taking $k=e_{i}$ forces the diagonal of $G$ to vanish and
+taking $k=e_{i}+e_{j}$ forces its off-diagonal entries to vanish, so $G=0$; the
+inverse correspondence then gives equality of the two $B$ matrices.
+
+Identity \eqref{eq:completed} is Corollary~C applied to
+$T=T_{B_{H}}$, which is the case $A=0$, $B=B_{H}$ of \eqref{eq:Tfamily}; it is
+not a direct application of Euler cancellation to $T_{B}$. Applying the
+symmetric gradient to \eqref{eq:bridge} and substituting into
+\eqref{eq:completed} gives \eqref{eq:defect}.
+\end{proof}
+
+The longitudinal term cannot be discarded from the pairing in
+\eqref{eq:defect}, because $(\omega\cdot\nabla)\omega$ need not be divergence
+free; an argument pairing a longitudinal vector against a transverse one is
+therefore insufficient to eliminate this defect.
+
+Since $\dv u=0$ and $H$ is symmetric, $\Phi_{H}(u)=-H_{ab}S_{ab}$. Expanding
+\eqref{eq:defect} over all symmetric $H$ gives the integrated tensor identity
+\begin{equation}
+\label{eq:tensoridentity}
+\int_{\T^{3}}\omega_{i}\omega_{j}
+\bigl(\partial_{a}\partial_{b}S_{ij}-\partial_{i}\partial_{j}S_{ab}\bigr)\,dx=0,
+\qquad 1\le a,b\le3 .
+\end{equation}
+The tensor is symmetric in $a,b$. Its trace is Miller's scalar identity
+\eqref{eq:miller}, up to the immaterial overall sign --- it is not three times
+that identity --- and its trace-free part supplies five anisotropic relations.
+For $H=cI$ one has $\Phi_{H}=0$ and \eqref{eq:defect} reduces to
+\eqref{eq:miller}.
+
+\subsection{What does not follow}
+\label{subsec:not-invariants}
+
+Two boundaries must be stated explicitly.
+
+\emph{The twelve directions are cancellations, not invariants.} When $R$ is
+self-adjoint on the solenoidal phase space, $\Qform_{R}=0$ is the statement
+that $\tfrac12\langle w,Rw\rangle$ is conserved by Euler. For general
+$R:\kperp\to\C^{3}$ the longitudinal output pairs against the pressure
+gradient in the full Euler equation, so the ten directions beyond
+$\spn\{I,\curl\}$ are not, in general, new Euler invariants. The correct
+reading of Theorem~A is a rigidity statement about the convective term, and
+that is how it is used in Corollary~C.
+
+\emph{The anisotropic completion is not a regularity criterion.} Identity
+\eqref{eq:defect} is exact, and for fixed $H$ the elementary bound
+\[
+|\langle L_{H}S,\omega\otimes\omega\rangle|
+\le\|\omega\|_{2}^{2}\,\|\nabla^{2}\Phi_{H}(u)\|_{L^{\infty}(\mathrm{op})}
+\]
+holds; it bounds the $H$-contracted expression, not every individual component
+for a single choice of $H$. The defect is a constant-coefficient third
+derivative of $u$, and standard energy control supplies no bound for the
+displayed norm. It is moreover a pressure-\emph{like} longitudinal potential
+rather than a nonlinear pressure: $\Phi_{H}$ is linear in $u$, whereas a
+pressure term is determined quadratically, and we assert no formula identifying
+their Hessians. For nonscalar $H$ the completion does not remove the analytic
+difficulty; it relocates it into the Hessian channel. No new a priori,
+scale-critical, time-integrable bound for that defect is proved here, and
+the geometric-depletion program is context and a possible direction, not a
+theorem of this paper.
+
+\section{Computer-assisted components, reproduction and formalization}
+\label{sec:computer}
+
+\subsection{What is analytic and what is finite}
+\label{subsec:split}
+
+The proof is not a numerical experiment. Its logical division is as follows.
+\begin{itemize}
+\item \emph{Analytic}: sufficiency of the generators
+(Section~\ref{sec:sufficiency}); phase separation (Lemma~\ref{lem:phase}); the
+raw and projected triad lemmas (Lemmas~\ref{lem:rawline} and
+\ref{lem:projected}); propagation through $\Z^{3}$
+(Section~\ref{sec:propagation}); reduction by the range condition
+(Corollary~B); uniqueness of $A,B$ (Proposition~\ref{prop:uniqueness}); the
+curl pullback and the anisotropic completion
+(Section~\ref{sec:strainvorticity}); and the singular-value formulas
+(Section~\ref{sec:singular}).
+\item \emph{Computer-assisted but exact}: the ranks of the two finite seeds,
+the selection of explicit nonsingular minors, the independent reconstruction
+of the constraint matrices, the unit-cube minimality search, and a large finite
+replay of the propagation order.
+\item \emph{Finite-dimensional linear algebra}: the optimality and stability of
+the sparse certificates (Theorem~D and
+Proposition~\ref{prop:stability}).
+\end{itemize}
+No floating-point rank decision and no numerical tolerance enters the
+certificates. The computations use integers, exact rational arithmetic, or
+exact reductions modulo primes.
+
+\subsection{Reproduction}
+\label{subsec:repro}
+
+The exact programs are run from a single entry point. They execute in isolated
+subprocesses and report the interpreter version, the source revision, the
+working-tree state and the elapsed time; the run fails if any certificate is
+missing or any assertion fails. The checks cover
+\begin{itemize}
+\item the $720$ solenoidal seed rows, exact rank $54/56$, and the two minor
+residues \eqref{eq:solminor};
+\item an independent replay of the same rows and of the energy--helicity
+kernel;
+\item all $264$ signed non-collinear unit-box target triads, with the exact
+complex ranks $8/4$ of \eqref{eq:localranks};
+\item $5{,}199$ solenoidal propagation steps, cumulatively over the boxes of
+radii $2,3,4,10$ (the radius-ten replay alone has $4{,}623$ steps);
+\item the $680$ unrestricted-output rows, exact modular rank $144/156$, the
+twelve generators, and the two minor residues \eqref{eq:rawminor};
+\item an independent reproduction of the unrestricted rows and of their
+SHA-256 digest;
+\item $4{,}617$ raw two-triad target blocks at exact rank twelve, reaching all
+$9{,}260$ signed modes through radius ten;
+\item all $4{,}095$ unit-cube subsets of at most six modes in the seven-mode
+minimality audit;
+\item sharp Hermitian certificates through radii $1,2,3,4,10$, including the
+assembled rational rank $246=4\cdot62-2$ at radius two;
+\item an exact semantic reconstruction of all $26$ selected Hermitian
+Boolean-seed rows from their signed triads, transverse polarizations and phase
+choices, checked row-by-row against the typed Lean matrix up to nonzero
+rational scaling;
+\item $56{,}064$ signed non-collinear triads, cumulatively over the boxes of
+radii $1,2,3$, against the exact singular-value formulas
+\eqref{eq:rawspec} and \eqref{eq:projspec};
+\item the sharp local minimum $1/10$, the sharp maximum condition number
+$\sqrt{15}$ of \eqref{eq:sharpcond}, and the near-isosceles family
+\eqref{eq:badfamily} through $n=100$;
+\item the curl-pullback identity \eqref{eq:equivalence}, the explicit negative
+control after \eqref{eq:miller}, and the corrected cancellations, in rational
+Gaussian arithmetic.
+\end{itemize}
+The selected seed rows, pivot columns, mode order and parameter order are
+exported in the accompanying machine-readable file
+\texttt{certificate-index.json} in the supplement directory. Row digests and
+modular-minor residues are asserted inside the individual programs and
+summarized in the repository certificate manifest. Two of the
+programs are deliberately independent at the algorithmic level: they import
+neither the corresponding Fourier row builders nor the row reducers, and
+instead reconstruct the convolution by recipient wavevector. Their agreement
+therefore checks the row construction through a distinct implementation path. Both are nevertheless
+written in the same language, so a re-implementation in a second system would
+strengthen the evidence further.
+
+\subsection{Formalization and the trust boundary}
+\label{subsec:lean}
+
+Theorem~A, its all-mode completion, Corollaries~B and C, the matrix-level
+finite-dimensional content supporting Theorem~D, and the local spectral and
+conditioning formulas are formalized in Lean~4 with Mathlib. The four
+supporting results added after the original classification have the following
+precise scope.
+\begin{itemize}
+\item \emph{Theorem~A$^{0}$.} Lean classifies every nonzero transverse
+fiber, identifies reality compatibility at frequency zero with a real
+$3\times3$ block, and proves that replacing this block by any real matrix
+does not change universal all-mode cancellation.
+\item \emph{Theorem~D.} Lean proves the rank--nullity lower bound for real
+scalar evaluation matrices, constructs sharp abstract coordinate
+certificates with counts $8M-2$, $4M-2$ and $12M-12$, verifies the
+$26\times28$ Hermitian Boolean-seed matrix has nullity two, and checks the
+ordered-count identities. Lean also proves a general propagation theorem
+for arbitrary-length unequal-triad orderings of any mode-set size, instantiated
+at one additional mode beyond the Boolean seed with explicit named test
+fields whose Euler cubic pairing vanishes against every admissible symbol.
+The realization of the complete sharp geometric families for every admissible
+ordering remains the analytic and exact-program argument of
+Sections~\ref{sec:results} and~\ref{sec:propagation}.
+\item \emph{Corollary~C.} For trigonometric polynomials, Lean evaluates the
+velocity and its vorticity as functions on the torus, differentiates them with
+the Mathlib derivative rather than by symbol manipulation, forms the pointwise
+contraction $\gsym(Tu):(\omega\otimes\omega)$, and proves that its normalized
+integral over $\mathbb{T}^{3}$---an iterated interval integral over one full
+period in each coordinate, reduced by the character orthogonality relation
+$\int_{0}^{2\pi}e^{\mathrm{i}nt}\,\mathrm{d}t=0$ for $n\neq0$---equals the
+finite-Fourier functional, together with the physical-space identity
+$\int\gsym(Tu):(\omega\otimes\omega)=-\int Tu\cdot(\omega\cdot\nabla)\omega$.
+The classification transfers to that integral. A second layer extends the
+functional by an absolutely convergent resonant series to the smooth
+solenoidal fields, those whose Fourier coefficients decay faster than every
+polynomial, exhibits a member of that class with infinite spectrum, and proves
+the same classification there by truncation; the extended functional is tied
+to physical space as the limit of the torus integrals of its truncations.
+No Sobolev completion at finite regularity is asserted.
+\item \emph{Section~\ref{sec:singular}.} Lean derives the raw and projected
+Gram matrices, the multiplicity-four observation spectrum, the sharp $1/10$
+and $\sqrt{15}$ bounds for every route family---the shifted-axis steps, the
+general steps with $m\ge3$ and the two admissible $m=2$ steps, and the two
+bootstrap triads, with the axis formulas obtained by substituting the
+axis-step parameters into the projected Gram spectrum rather than postulated
+separately---the quadratically ill-conditioned family, and the stability
+estimate \eqref{eq:stability} with no spectral hypothesis: positivity of
+$\gamma_{\Lambda}$ on $K^{\perp}$ is derived from finite-dimensionality
+rather than assumed, and the estimate is instantiated at the Hermitian
+Boolean-seed certificate itself. The constant is per certificate; no bound
+uniform in the mode count is formalized, in line with
+Problem~\ref{prob:gamma}.
+\end{itemize}
+At the checked revision, the source contains no \texttt{sorry} or
+\texttt{admit}, and every declared module elaborates under the pinned
+toolchain. This does not make every certificate kernel-checked; the trust
+status splits as follows.
+
+Kernel-checked, depending only on \texttt{propext},
+\texttt{Classical.choice} and \texttt{Quot.sound}: the vector identities used
+throughout; Lemma~\ref{lem:scalarity} in a slightly stronger form that does not
+assume symmetry; Proposition~\ref{prop:uniqueness} and the uniqueness of the
+two generator matrices on all nonzero transverse fibers; the finite-support
+Fourier definitions of admissible fields, symbols, convolution and the cubic
+form; reality compatibility of the classified family; the generator
+cancellations on every triad and the finite-sum argument connecting triad
+cancellation to the convolutional cubic form, that is, sufficiency for every
+admissible finite Fourier field including an arbitrary invisible zero-mode
+block; phase polarization, i.e.\ Lemma~\ref{lem:phase}; the raw-recipient
+parametrization and the local two-triad determination rule of
+Lemma~\ref{lem:rawline}; reality transport of fiberwise vanishing; the
+propagation theorem in the $\ell^{1}$-shell order of
+Section~\ref{subsec:rawprop}, with concrete parent-pair certificates for every
+nonzero lattice mode outside the cube; the two-frame decomposition of a
+transverse fiber at each of the thirteen seed modes; a non-vacuity witness
+showing that $R(k)=\|k\|^{2}I$ is reality compatible but not a generator, so
+that neither side of the classification is trivially satisfied; and the
+\emph{semantic seed bridge}, which proves that a reality-compatible symbol with
+triad cancellation satisfies every selected constraint of the unit-cube matrix.
+The bridge is what makes the rank computation a statement about symbols rather
+than about an arbitrary integer matrix.
+
+Compiler-trusted: the rank-$144$ claim over $\Z/101\Z$ and the explicit inverse
+certificate for the selected $144\times144$ modular minor are discharged by
+\texttt{native\_decide}, which evaluates compiled code instead of reducing in
+the kernel, and therefore trusts the Lean compiler, its runtime and GMP. The
+formal statements of Theorem~A and Corollary~B inherit seven such axioms. The
+precise status is: \emph{the analytic necessity and sufficiency arguments
+for Theorem~A and Corollary~B are kernel-checked, and the formal
+Theorem~A holds modulo trusting the Lean compiler for one finite
+linear-algebra computation.} The certificate is roughly three million modular
+operations, which is not viable for kernel reduction at present; shrinking it
+is the route to removing this dependency. The authoritative check is
+\texttt{\#print axioms} applied to the formal statements, not any prose list.
+
+The later formalization has three deliberately separated trust layers. First,
+the all-mode theorem records the arbitrary real zero block; Corollary~C is
+realized as a normalized integral over the three-torus of the pointwise
+contraction, and extended from trigonometric polynomials to the smooth
+solenoidal fields; the geometric frame identities, local Gram spectra,
+multiplicity-four observation, route bounds, bad family and stability modulo
+the exact kernel are kernel-checked. Second, Lean proves that the typed
+$26\times28$ Hermitian Boolean-seed matrix has rank $26$ and nullity $2$ and
+proves the sharp $8M-2$, $4M-2$ and $12M-12$ scalar lower bounds at the
+finite-dimensional matrix level; the seed rank calculation uses the disclosed
+\texttt{native\_decide} boundary. Third, the mandatory exact program
+\texttt{verify\_solenoidal\_seed\_semantics.py} reconstructs every selected
+Hermitian row from an explicit triad-supported Euler test field and compares
+it with the Lean matrix. This last physical-to-matrix reconstruction is an
+exact executable bridge, not yet an internal kernel-checked Lean theorem.
+
+The formal development stops at the smooth solenoidal fields. It does not
+assert a Sobolev completion at finite regularity, a multiplier-domain theorem
+or PDE solution theory, and on the smooth class the functional is tied to
+physical space as the limit of the torus integrals of its truncations rather
+than by an integral of the smooth field itself.
+Likewise, the Lean matrix-count theorem does not by itself construct the full
+geometric observation family for every ordering in Theorem~D; that construction
+is the analytic and exact-certificate argument in Sections~\ref{sec:results}
+and~\ref{sec:propagation}. These boundaries prevent an abstract coordinate
+matrix from being mislabeled as a fully internalized physical certificate.
+
+\section{Discussion and open problems}
+\label{sec:discussion}
+
+Universal orthogonality to three-dimensional Euler convection is highly
+restrictive. Translation invariance and reality alone force an arbitrary Fourier symbol into a
+finite-dimensional family of restrictions of constant-coefficient, formally
+self-adjoint operators: twelve dimensions before the pressure direction is
+removed and only two on the solenoidal phase space. Allowing longitudinal
+output creates the larger kernel, while imposing the solenoidal range
+condition leaves only the energy--helicity family. The isosceles defect is
+created by the Leray projection and is measured by \eqref{eq:sinh}; both
+statements admit sharp finite certificates
+verified in exact arithmetic. Through the vorticity, the same theorem
+classifies the universal Fourier-multiplier extensions of the scalar
+strain--vorticity cancellation and identifies the precise pressure-like
+completion that anisotropy requires.
+
+The claims have clear limits. The paper does not address existence,
+regularity or blow-up. It does not prove a multiplier theorem on $\R^{3}$, and
+the zero Fourier block is invisible
+rather than rigid. The novelty statement in Section~\ref{subsec:boundary}
+is subject to the same limits.
+
+Open problems include the following.
+\begin{enumerate}
+\item Can the finite seed ranks be replaced by a short symbolic argument that
+preserves the unrestricted hypotheses, removing the computer-assisted step
+entirely?
+\item Does a six-mode solenoidal seed exist outside the coordinate unit cube?
+The minimality result of Section~\ref{subsec:solseed} is confined to that cube.
+\item\label{prob:gamma} Can the smallest positive singular value
+$\gamma_{\Lambda}$ of the complete sparse certificate be bounded uniformly, or
+at least polynomially, in the box radius? Proposition~\ref{prop:stability}
+shows that the local bounds \eqref{eq:sharpcond} do not suffice.
+\item What is the optimal propagation graph for global conditioning, as
+opposed to the optimal number of tests?
+\item Is there an analogous classification on $\R^{3}$ under natural
+regularity assumptions on a continuous symbol?
+\item How does the classification change on other compact three-manifolds, or
+on irrational tori?
+\item Can the logarithmic shell gap in \eqref{eq:sinh} be coupled to a
+dynamical inter-shell decorrelation estimate?
+\item Can the longitudinal completion \eqref{eq:defect} be exploited
+dynamically without losing control to the Hessian channel?
+\end{enumerate}
+
+\appendix
+
+\section{Certificate data}
+\label{app:certificates}
+
+The following constants are asserted by the verification programs and
+summarized in the machine-readable manifest that accompanies the source
+release.
+
+\begin{center}
+\small
+\begin{tabular}{ll}
+\hline
+Quantity & Value\\
+\hline
+Complex solenoidal seed & $7$ unoriented modes, $56$ parameters\\
+\quad nonzero rows / rank / nullity & $720$ / $54$ / $2$\\
+\quad minor residues mod $(1000003,\,1000000007)$
+ & $(190194,\,891695525)$\\
+Hermitian solenoidal seed & $7$ unoriented modes, $28$ parameters\\
+\quad nonzero rows / rank / nullity & $592$ / $26$ / $2$\\
+Unrestricted-output seed & $13$ unoriented modes, $156$ parameters\\
+\quad nonzero rows / rank / nullity & $680$ / $144$ / $12$\\
+\quad minor residues mod $(1000003,\,1000000007)$
+ & $(272144,\,290707620)$\\
+\quad canonical row digest (SHA-256)
+ & \texttt{a4fc3b45\dots39e9c30d}\\
+Local projected ranks in the unit box
+ & $264$ signed triads: $192$ of rank $8$, $72$ of rank $4$\\
+Solenoidal propagation replay
+ & $5199$ steps over radii $2,3,4,10$\\
+Raw two-triad propagation replay
+ & $4617$ target blocks, $9260$ signed modes\\
+Unit-cube minimality search & $4095$ subsets, exactly four minimizers\\
+Local conditioning replay & $56064$ signed triads over radii $1,2,3$\\
+Sharp local bounds
+ & $\sigma_{\min}^{2}=1/10$, $\cond=\sqrt{15}$\\
+\hline
+\end{tabular}
+\normalsize
+\end{center}
+
+The full digest is
+\begin{center}
+\texttt{a4fc3b45a6fc94defd38d992dbbe27f4413254b3af307e41d1c7e25839e9c30d}
+\end{center}
+The solenoidal propagation count is cumulative over the listed boxes; the
+radius-ten ordering alone contributes $4623$ steps. The local-conditioning
+count is likewise cumulative. The unit-cube minimality statement exhausts all
+subsets of at most six modes of $\Lambda_{1}$ and finds exactly four
+seven-mode minimizers; it is not a statement about arbitrary six-mode
+configurations elsewhere in the lattice.
+
+\section*{Data and code availability}
+
+The exact-arithmetic certificate programs, the machine-readable certificate
+manifest and the Lean formalization accompany this paper in the repository
+release. The verification entry point and software versions are recorded in
+the accompanying reproduction documentation; the release identifier should
+be retained when the materials are archived or cited.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

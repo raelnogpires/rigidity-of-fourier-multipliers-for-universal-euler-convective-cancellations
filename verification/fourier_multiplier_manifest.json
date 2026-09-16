@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "scope": "Fourier-multiplier classification on the three-torus",
+  "entrypoint": "python3 -B verification/run_fourier_multiplier_checks.py",
+  "programs": [
+    "verify_laplacian_rigidity.py",
+    "explore_full_multiplier.py",
+    "verify_full_multiplier_rigidity.py",
+    "verify_general_multiplier_rigidity.py",
+    "audit_general_multiplier_certificate.py",
+    "verify_unrestricted_output_rigidity.py",
+    "audit_unrestricted_output_certificate.py",
+    "verify_minimal_boolean_seed.py",
+    "verify_solenoidal_seed_semantics.py",
+    "verify_sparse_certificate.py",
+    "verify_local_conditioning.py",
+    "verify_strain_vorticity_pullback.py",
+    "verify_publication_certificate_index.py",
+    "verify_lean_source_hygiene.py"
+  ],
+  "certificates": {
+    "complex_solenoidal_seed": {
+      "unoriented_modes": 7,
+      "real_parameters": 56,
+      "nonzero_rows": 720,
+      "rank": 54,
+      "nullity": 2,
+      "primes": [
+        1000003,
+        1000000007
+      ],
+      "minor_determinants": [
+        190194,
+        891695525
+      ]
+    },
+    "hermitian_solenoidal_seed": {
+      "unoriented_modes": 7,
+      "real_parameters": 28,
+      "nonzero_rows": 592,
+      "rank": 26,
+      "nullity": 2,
+      "semantic_bridge": "26 selected Lean rows reconstructed from explicit triad-supported field evaluations"
+    },
+    "complex_unrestricted_output_seed": {
+      "unoriented_modes": 13,
+      "real_parameters": 156,
+      "nonzero_rows": 680,
+      "rank": 144,
+      "nullity": 12,
+      "primes": [
+        1000003,
+        1000000007
+      ],
+      "minor_determinants": [
+        272144,
+        290707620
+      ],
+      "row_sha256": "a4fc3b45a6fc94defd38d992dbbe27f4413254b3af307e41d1c7e25839e9c30d"
+    }
+  },
+  "local_target_ranks": {
+    "complex_solenoidal_unequal_parent_lengths": 8,
+    "complex_solenoidal_equal_parent_lengths": 4,
+    "hermitian_solenoidal_unequal_parent_lengths": 4,
+    "hermitian_solenoidal_equal_parent_lengths": 3,
+    "complex_unrestricted_one_triad": 8,
+    "complex_unrestricted_two_nonparallel_triads": 12
+  },
+  "optimal_nonzero_mode_test_counts": {
+    "complex_solenoidal": "8M-2",
+    "hermitian_solenoidal": "4M-2",
+    "complex_unrestricted_output": "12M-12"
+  },
+  "all_mode_completion": {
+    "zero_block_real_parameters": 9,
+    "zero_block_constraint": "invisible",
+    "unrestricted_total_kernel_dimension": 21,
+    "complex_solenoidal_total_kernel_dimension": 11
+  }
+}
