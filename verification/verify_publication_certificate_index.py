@@ -24,14 +24,30 @@ from verify_unrestricted_output_rigidity import (
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
-INDEX_PATH = (
+# The supplement sits under the manuscript tree in the working repository and
+# directly under paper/ in the standalone release repository.
+CANDIDATE_INDEX_PATHS = (
     REPOSITORY_ROOT
     / "publishing"
     / "fourier-multiplier-rigidity"
     / "manuscript"
     / "supplement"
-    / "certificate-index.json"
+    / "certificate-index.json",
+    REPOSITORY_ROOT / "paper" / "supplement" / "certificate-index.json",
 )
+
+
+def resolve_index_path() -> Path:
+    for candidate in CANDIDATE_INDEX_PATHS:
+        if candidate.is_file():
+            return candidate
+    searched = "\n  ".join(str(path) for path in CANDIDATE_INDEX_PATHS)
+    raise FileNotFoundError(
+        f"certificate-index.json not found in any known layout:\n  {searched}"
+    )
+
+
+INDEX_PATH = resolve_index_path()
 
 
 def tuples(values: list[list[int]]) -> tuple[tuple[int, ...], ...]:
