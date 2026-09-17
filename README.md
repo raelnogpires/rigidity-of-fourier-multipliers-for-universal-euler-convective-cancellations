@@ -50,7 +50,7 @@ applies from v1.0.4 onward.
 
 > Nogueira Pires, R. (2026). *Certificate programs and Lean 4 formalization
 > for "Rigidity of Fourier Multipliers for Universal Euler Convective
-> Cancellations"* (v1.0.5) [Software]. Zenodo.
+> Cancellations"* (v1.0.6) [Software]. Zenodo.
 > https://doi.org/10.5281/zenodo.22819121
 
 Machine-readable citation metadata is in

@@ -2,7 +2,7 @@
 
 Human-readable description of the computer-assisted components cited by
 [`../manuscript.tex`](../manuscript.tex) §10 and Appendix A. This file
-describes the contents of release `v1.0.5`, archived on Zenodo under the
+describes the contents of release `v1.0.6`, archived on Zenodo under the
 concept DOI [10.5281/zenodo.22819121](https://doi.org/10.5281/zenodo.22819121),
 which resolves to the most recent release and lists the version DOI of each
 individual snapshot.
@@ -54,7 +54,7 @@ lake env lean lean/CheckAxioms.lean
 | Result | 14 of 14 programs passed, 304.6 s |
 | Python | 3.12.3 |
 | Platform | Linux x86-64, glibc 2.39 |
-| Git revision | the commit tagged `v1.0.5` in this repository |
+| Git revision | the commit tagged `v1.0.6` in this repository |
 | Working tree | clean at that tag |
 | Manifest | `verification/fourier_multiplier_manifest.json`, schema 1 |
 
@@ -121,7 +121,7 @@ Package dependencies are `amsmath`, `amssymb`, `amsthm`, `mathtools`,
 
 ## Release provenance
 
-- The snapshot is the immutable tag `v1.0.5`, retained in the repository.
+- The snapshot is the immutable tag `v1.0.6`, retained in the repository.
 - The archival identifier is the Zenodo concept DOI
   [10.5281/zenodo.22819121](https://doi.org/10.5281/zenodo.22819121); the
   version DOI of this snapshot is listed under "Versions" on that record.
