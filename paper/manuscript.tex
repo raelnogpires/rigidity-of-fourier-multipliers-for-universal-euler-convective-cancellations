@@ -225,7 +225,8 @@ that no smaller family can work (Theorem~D). The machine-readable supplement
 exports the selected seed rows, pivot columns, mode order and parameter
 ordering used by the nonsingular-minor certificates. For a coordinate box of radius $N$ these have the
 optimal $\Theta(N^{3})$ size rather than the $\Theta(N^{6})$ cost of scanning
-a dense collection of triads.
+a dense collection of triads. No result on PDE existence, smoothness, or
+regularity is claimed anywhere in this paper.
 
 \subsection{Method, and what is checked by machine}
 \label{subsec:method}
@@ -355,68 +356,24 @@ Section~\ref{sec:strainvorticity}. The scalar Laplacian
 strain--vorticity identity is a direct antecedent of Corollary~C; our claim
 concerns the classification and the anisotropic longitudinal completion.
 
-\subsection{Novelty boundary and claims not made}
-\label{subsec:boundary}
-
-To the best of our knowledge, the existing local-conservation,
-rugged-invariant, Hamiltonian/Casimir and helical-triad classifications do
-not
-state the all-symbol implication proved here, its automatic-Hermiticity
-corollary, or the unrestricted longitudinal kernel. We therefore treat these
-as candidate new results, subject to specialist and peer review. A targeted
-prior-art audit located no exact duplicate, but a literature search cannot
-establish historical priority, and equivalent statements could be embedded in
-older sources indexed under different terminology.
-
-The following standard facts are not claimed as new: conservation of energy and
-helicity; their triad-by-triad manifestations; additional invariants of
-isolated or decimated triad systems; the helical decomposition; classifications
-of local conservation laws and of regular Casimirs; triad-network nullspace
-methodology; and the scalar Laplacian strain--vorticity identity.
-
-The following are explicitly \emph{not} proved anywhere in this paper.
-\begin{enumerate}
-\item No result on PDE existence, smoothness, or regularity is claimed. The
-anisotropic completion of Section~\ref{subsec:anisotropic} is a structural identity; it identifies the
-Hessian defect exactly, but supplies no new scale-critical, time-integrable
-bound for it.
-\item No closed coercive a priori estimate is proved.
-\item No multiplier theorem on $\R^{3}$. The propagation argument uses the
-lattice $\Z^{3}$ throughout.
-\item No rigidity at the zero Fourier mode; that block is proved invisible and
-remains arbitrary.
-\item No boundedness, continuity or growth hypothesis is imposed on the
-symbol. The classification itself implies
-$\|R(k)\|=O_{A,B}(1+|k|)$, but no multiplier-extension or form-domain theorem on
-completed function spaces is developed here. All tests are trigonometric
-polynomials, so every sum is finite.
-\item No classification of nonlinear, time-dependent, or
-non-translation-invariant functionals.
-\item Minimality of the seven-mode seed is proved only among subsets of the
-coordinate unit cube, not among arbitrary six-mode lattice configurations.
-\item Theorem~D applies only under its two explicit ordering hypotheses, not
-to an arbitrary finite symmetric mode set.
-\end{enumerate}
+The new results are the all-symbol implication (Theorem~A), the automatic
+Hermiticity in the solenoidal class (Corollary~B), and the twelve-dimensional
+unrestricted longitudinal kernel; the standard facts recalled above ---
+conservation of energy and helicity, their triad manifestations, the helical
+decomposition, the local conservation-law and Casimir classifications, the
+triad-network nullspace methodology, and the scalar Laplacian
+strain--vorticity identity --- are not claimed as new.
 
 \subsection{Outline}
 \label{subsec:outline}
 
-Section~\ref{sec:setting} fixes the conventions --- frames, reality, the
-bilinear pairing --- and proves the coordinate-invariance lemma that reconciles
-the normalized frames used in the text with the integer frames used by the
-certificate programs. Section~\ref{sec:results} states the complete theorem
-package. Section~\ref{sec:sufficiency} proves sufficiency.
-Section~\ref{sec:triad} develops the triad reduction and the two local lemmas.
-Section~\ref{sec:seeds} constructs the exact finite seeds and states their
-certified kernels. Section~\ref{sec:propagation} carries out the lattice
-propagation and completes the proofs of Theorems~A, A$^{0}$, D and
-Corollary~B. Section~\ref{sec:singular} computes the raw and projected
-singular spectra and the conditioning of the explicit route.
-Section~\ref{sec:strainvorticity} proves Corollary~C and the anisotropic
-longitudinal completion. Section~\ref{sec:computer} documents the
-computer-assisted components, their reproduction, and the formalization trust
-boundary. Section~\ref{sec:discussion} collects limitations and open problems.
-Appendix~\ref{app:certificates} tabulates the certificate data.
+Sections~\ref{sec:setting}--\ref{sec:results} fix conventions and state the
+results. Sections~\ref{sec:sufficiency}--\ref{sec:propagation} prove
+sufficiency, the triad lemmas, the finite seeds and the lattice propagation.
+Section~\ref{sec:singular} gives the singular spectra, Section~\ref{sec:strainvorticity}
+the strain--vorticity applications, and Section~\ref{sec:computer} the
+computer-assisted components and formalization. Section~\ref{sec:discussion}
+lists open problems.
 
 \section{Setting, notation and conventions}
 \label{sec:setting}
@@ -1373,9 +1330,11 @@ Subtract it and again call the difference $D$, a reality-compatible symbol with
 unrestricted output that satisfies \eqref{eq:universal} and vanishes on
 $\Lambda_{1}\cup(-\Lambda_{1})$.
 
-Induct on $|t|_{1}$, starting at shell $3$: every non-axis mode in shells $1$
-and $2$ already lies in the coordinate unit cube. Within each shell, process
-all non-axis targets before the axis targets.
+First recover the shell-2 axis modes $2e_{i}$ by \eqref{eq:axis1} with the
+parent pair $e_{i},(e_{i}+e_{j})\in\Lambda_{1}$; every non-axis mode in shells
+$1$ and $2$ already lies in the coordinate unit cube. Then induct on
+$|t|_{1}\ge3$. Within each shell, process all non-axis targets before the
+axis targets.
 
 Let $t$ be a non-axis target with $|t|_{1}=n\ge3$, choose two nonzero
 coordinates $i,j$, and set $s_{i}=\sgn(t_{i})e_{i}$, $s_{j}=\sgn(t_{j})e_{j}$.
@@ -2336,9 +2295,10 @@ completion that anisotropy requires.
 
 The claims have clear limits. The paper does not address existence,
 regularity or blow-up. It does not prove a multiplier theorem on $\R^{3}$, and
-the zero Fourier block is invisible
-rather than rigid. The novelty statement in Section~\ref{subsec:boundary}
-is subject to the same limits.
+the zero Fourier block is invisible rather than rigid. No classification of
+nonlinear, time-dependent, or non-translation-invariant functionals is
+attempted; the multiplier class considered throughout is translation-invariant
+by construction.
 
 Open problems include the following.
 \begin{enumerate}
