@@ -51,7 +51,7 @@ lake env lean lean/CheckAxioms.lean
 |---|---|
 | Date | 17 September 2026 |
 | Entrypoint | `verification/run_fourier_multiplier_checks.py` |
-| Result | 14 of 14 programs passed, 363.4 s |
+| Result | 14 of 14 programs passed, 304.6 s |
 | Python | 3.12.3 |
 | Platform | Linux x86-64, glibc 2.39 |
 | Git revision | the commit tagged `v1.0.5` in this repository |
