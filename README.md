@@ -43,3 +43,19 @@ trust the Lean compiler, runtime, and GMP. The physical-to-matrix provenance
 for the Hermitian seed is additionally checked by the independent Python
 semantic verifier. See `paper/supplement/verification-notes.md` and
 `lean/README.md` for the full boundary.
+
+## License
+
+All contents of this repository — the manuscript, the verification programs,
+and the Lean formalization — are licensed under the
+[Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/)
+(CC BY 4.0). You may share and adapt the material for any purpose, including
+commercially, provided you give appropriate credit.
+
+When reusing the verification programs or the Lean development, note that
+CC BY 4.0 is a content license: it grants no explicit patent rights and
+imposes no source-availability obligation. Attribute this repository by its
+immutable Git tag or archival DOI.
+
+Releases up to and including v1.0.3 were published under the MIT License;
+that grant remains in effect for those snapshots.
