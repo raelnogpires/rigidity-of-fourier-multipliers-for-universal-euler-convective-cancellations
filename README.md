@@ -1,5 +1,8 @@
 # Rigidity of Fourier Multipliers for Universal Euler Convective Cancellations
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22819122.svg)](https://doi.org/10.5281/zenodo.22819122)
+[![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
+
 Release repository accompanying the paper by Rael Nogueira Pires.
 
 ## Contents
@@ -33,6 +36,19 @@ pdflatex -interaction=nonstopmode -halt-on-error manuscript.tex
 
 The release identifier is the immutable Git tag or archival DOI assigned to
 this repository snapshot. Retain it when citing or archiving these materials.
+
+## Citation
+
+Each release is archived on Zenodo. Cite the version you actually used:
+
+| | DOI |
+| --- | --- |
+| v1.0.3 (current) | [10.5281/zenodo.22819122](https://doi.org/10.5281/zenodo.22819122) |
+| All versions (resolves to latest) | [10.5281/zenodo.22819121](https://doi.org/10.5281/zenodo.22819121) |
+
+> Nogueira Pires, R. (2026). *Rigidity of Fourier Multipliers for Universal
+> Euler Convective Cancellations* (v1.0.3) [Software]. Zenodo.
+> https://doi.org/10.5281/zenodo.22819122
 
 ## Scope and trust boundary
 
