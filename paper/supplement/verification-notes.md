@@ -2,8 +2,10 @@
 
 Human-readable description of the computer-assisted components cited by
 [`../manuscript.tex`](../manuscript.tex) §10 and Appendix A. This file
-describes the release contents. The immutable Git tag or archival identifier
-must be recorded here when this repository snapshot is published.
+describes the contents of release `v1.0.5`, archived on Zenodo under the
+concept DOI [10.5281/zenodo.22819121](https://doi.org/10.5281/zenodo.22819121),
+which resolves to the most recent release and lists the version DOI of each
+individual snapshot.
 
 ## What the manuscript relies on
 
@@ -47,14 +49,19 @@ lake env lean lean/CheckAxioms.lean
 
 | Field | Value |
 |---|---|
-| Date | 16 September 2026 |
+| Date | 17 September 2026 |
 | Entrypoint | `verification/run_fourier_multiplier_checks.py` |
-| Result | 12 of 12 programs passed, 195.5 s |
-| Python | 3.11.15 |
+| Result | 14 of 14 programs passed, 363.4 s |
+| Python | 3.12.3 |
 | Platform | Linux x86-64, glibc 2.39 |
-| Git revision | record the release commit here |
-| Working tree | release snapshot |
+| Git revision | the commit tagged `v1.0.5` in this repository |
+| Working tree | clean at that tag |
 | Manifest | `verification/fourier_multiplier_manifest.json`, schema 1 |
+
+The run above was performed from a checkout of this repository, so it exercises
+the same directory layout that a reader obtains from the archive. The complete
+suite, `verification/run_all.py`, was run from the same checkout on the same
+date and passed 29 of 29 programs in 558.8 s.
 
 Programs executed, all passing: `verify_laplacian_rigidity.py`,
 `explore_full_multiplier.py`, `verify_full_multiplier_rigidity.py`,
@@ -62,8 +69,10 @@ Programs executed, all passing: `verify_laplacian_rigidity.py`,
 `audit_general_multiplier_certificate.py`,
 `verify_unrestricted_output_rigidity.py`,
 `audit_unrestricted_output_certificate.py`,
-`verify_minimal_boolean_seed.py`, `verify_sparse_certificate.py`,
-`verify_local_conditioning.py`, `verify_strain_vorticity_pullback.py`,
+`verify_minimal_boolean_seed.py`, `verify_solenoidal_seed_semantics.py`,
+`verify_sparse_certificate.py`, `verify_local_conditioning.py`,
+`verify_strain_vorticity_pullback.py`,
+`verify_publication_certificate_index.py`,
 `verify_lean_source_hygiene.py`.
 
 The two `audit_*` programs import neither the corresponding Fourier row
@@ -73,11 +82,28 @@ are written in Python, so a re-implementation in a second computer-algebra
 system would strengthen the evidence further. This is stated in §10.2 of the
 manuscript and must not be overclaimed.
 
-The recorded working-tree snapshot above did not include a Lean build. The
-complete pull-request workflow subsequently passed the exact suite, `lake
-build`, the axiom report, and the manuscript build on 12 September 2026; see
-[workflow run 20](https://github.com/raelnogpires/navier-stokes-analysis/actions/runs/34718675068). The manuscript's §10.3 trust boundary remains
-controlled by [`../../../../lean/README.md`](../../../../lean/README.md).
+## Recorded Lean build and axiom report
+
+`lake build` was run on 17 September 2026 against the toolchain pinned in
+`lean-toolchain` (`leanprover/lean4:v4.33.1`) and completed successfully, 2742
+jobs, with no errors. `lake env lean lean/CheckAxioms.lean` then reported the
+axiom dependencies of 73 declarations:
+
+| Field | Value |
+|---|---|
+| `sorryAx` occurrences | none, so no proof is admitted |
+| Declarations reported | 73 |
+| Declarations free of `native_decide` | 57 |
+| Distinct `native_decide` axioms | 11 |
+| Reached by `theoremA` and `corollaryB` | 7, through `SeedCertificate` |
+| Reached by the Boolean-seed rank and nullity | 4, through `SolenoidalSeedCertificate` |
+
+The two groups of axioms are disjoint, so the classification result and the
+Boolean-seed computation rest on different finite evaluations. Every
+`native_decide` axiom is an explicit trust boundary: it certifies a finite
+computation by compiled evaluation rather than by kernel reduction, and so
+trusts the Lean compiler, its runtime and GMP. The manuscript's §10.3 trust
+boundary remains controlled by the Lean development's own `README.md`.
 
 ## Manuscript build
 
@@ -93,9 +119,21 @@ Package dependencies are `amsmath`, `amssymb`, `amsthm`, `mathtools`,
 `geometry` and `hyperref`, all in `texlive-latex-base` and
 `texlive-latex-recommended`. There are no figures and no vendor sample files.
 
-## Release checklist
+## Release provenance
 
-- create and retain an immutable release tag;
-- record the release commit or archival identifier in this file;
-- verify that the manifest and certificate index match that tag;
-- cite the immutable release identifier alongside the paper.
+- The snapshot is the immutable tag `v1.0.5`, retained in the repository.
+- The archival identifier is the Zenodo concept DOI
+  [10.5281/zenodo.22819121](https://doi.org/10.5281/zenodo.22819121); the
+  version DOI of this snapshot is listed under "Versions" on that record.
+- `verify_publication_certificate_index.py` checks
+  [certificate-index.json](certificate-index.json) against the constants
+  asserted by the exact programs, and runs as part of the entry point above,
+  so the manifest and the certificate index are checked at this tag.
+- The manuscript cites the concept DOI in its data and code availability
+  statement.
+
+## Independent review
+
+The argument and its novelty boundary have not yet had independent specialist
+review. The certificates described above are machine-checked; that is a
+different and weaker claim than peer review, and is not a substitute for it.

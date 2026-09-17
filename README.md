@@ -48,9 +48,23 @@ Note that v1.0.3 and earlier were archived before this repository carried a
 license file; those snapshots were published under the MIT License. CC BY 4.0
 applies from v1.0.4 onward.
 
-> Nogueira Pires, R. (2026). *Rigidity of Fourier Multipliers for Universal
-> Euler Convective Cancellations* (v1.0.4) [Software]. Zenodo.
+> Nogueira Pires, R. (2026). *Certificate programs and Lean 4 formalization
+> for "Rigidity of Fourier Multipliers for Universal Euler Convective
+> Cancellations"* (v1.0.5) [Software]. Zenodo.
 > https://doi.org/10.5281/zenodo.22819121
+
+Machine-readable citation metadata is in
+[`CITATION.cff`](CITATION.cff); the metadata published with each Zenodo release
+is pinned by [`.zenodo.json`](.zenodo.json).
+
+## Releasing
+
+Zenodo mints a new version DOI from each published GitHub release, and takes
+its metadata from [`.zenodo.json`](.zenodo.json), so that file is the single
+place to edit citation metadata. Before tagging a release, update the tag name
+recorded in [`paper/supplement/verification-notes.md`](paper/supplement/verification-notes.md)
+— under "Recorded run" and "Release provenance" — and re-run the entry point so
+the recorded result matches the snapshot being archived.
 
 ## Scope and trust boundary
 

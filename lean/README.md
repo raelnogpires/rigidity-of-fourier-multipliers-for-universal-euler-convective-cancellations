@@ -46,12 +46,16 @@ of nullity two; and `LocalSpectra.lean` proves the geometric frame formulas,
 Gram spectra, multiplicity-four observation, route bounds, unstable family,
 and stability modulo the exact kernel.
 
-The repaired source contains no admitted proofs. A successful CI build is
-required to establish that its new proof scripts elaborate. The development
-is not uniformly kernel-checked: the original eleven `native_decide` calls
-are supplemented by seven in `SolenoidalSeedCertificate.lean`. The original
-classification and the separate Boolean-seed computation have different
-dependency graphs; use the axiom report rather than conflating them.
+The repaired source contains no admitted proofs. A successful build is
+required to establish that its new proof scripts elaborate. The development is
+not uniformly kernel-checked: the source contains twenty-one `native_decide`
+invocations, which the axiom report collapses to eleven distinct axioms. Seven
+of them are reached by `theoremA` and `corollaryB` through `SeedCertificate`;
+the remaining four are reached only by the Boolean-seed rank and nullity
+theorems through `SolenoidalSeedCertificate`, and the two sets are disjoint.
+The original classification and the separate Boolean-seed computation
+therefore have different dependency graphs; use the axiom report rather than
+conflating them.
 
 For the Hermitian Boolean seed, the mandatory exact verifier
 `verification/verify_solenoidal_seed_semantics.py` reconstructs all 26
@@ -294,9 +298,9 @@ drift.
 
 ## Scope
 
-`theoremA` and `corollaryB` are the main theorem package of Section 3 of
-`research/01-fourier-multiplier-rigidity/proof.md`: the mean-zero
-unrestricted-output classification, and the solenoidal collapse.
+`theoremA` and `corollaryB` are the main theorem package of the manuscript,
+its Theorem A and Corollary B: the mean-zero unrestricted-output
+classification, and the solenoidal collapse.
 
 The finite-Fourier statements used by the manuscript are formalized. The
 strain-vorticity functional is additionally realized as a genuine integral over
@@ -327,6 +331,6 @@ python3 -B verification/verify_lean_source_hygiene.py
 On a fresh machine, install the toolchain pinned in `lean-toolchain` using
 Elan, then run `lake exe cache get` before the build. The repository-local
 Elan command above applies only if that optional local installation exists.
-The GitHub workflow performs this setup on a fresh runner. See
-[`../audits/fourier-rigidity-repair.md`](../audits/fourier-rigidity-repair.md)
-for observed verification results; source inspection alone is not a build.
+The observed results of the most recent build and axiom report are recorded in
+the verification notes shipped with the manuscript supplement; source
+inspection alone is not a build.

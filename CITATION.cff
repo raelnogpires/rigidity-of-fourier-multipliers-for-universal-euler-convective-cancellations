@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use these materials, please cite them using the metadata below."
+title: >-
+  Certificate programs and Lean 4 formalization for "Rigidity of Fourier
+  Multipliers for Universal Euler Convective Cancellations"
+abstract: >-
+  Exact-arithmetic certificate programs and a Lean 4 formalization accompanying
+  the paper "Rigidity of Fourier Multipliers for Universal Euler Convective
+  Cancellations". The programs certify the ranks of the finite seed matrices
+  over the rationals using integer, exact rational, and modular arithmetic; no
+  floating-point rank decision enters any certificate. The Lean development
+  covers the main classification theorem and its solenoidal corollary and
+  contains no admitted proofs.
+type: software
+authors:
+  - family-names: "Nogueira Pires"
+    given-names: Rael
+license: CC-BY-4.0
+repository-code: >-
+  https://github.com/raelnogpires/rigidity-of-fourier-multipliers-for-universal-euler-convective-cancellations
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22819121
+    description: Concept DOI, resolving to the most recent release.
+keywords:
+  - Euler equations
+  - Fourier multipliers
+  - rigidity
+  - exact arithmetic certificates
+  - Lean 4
+  - formal verification
+  - energy and helicity

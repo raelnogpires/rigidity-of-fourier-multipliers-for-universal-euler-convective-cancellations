@@ -1,0 +1,21 @@
+{
+  "title": "Certificate programs and Lean 4 formalization for \"Rigidity of Fourier Multipliers for Universal Euler Convective Cancellations\"",
+  "description": "<p>This deposit contains the exact-arithmetic certificate programs and the Lean 4 formalization accompanying the paper <em>Rigidity of Fourier Multipliers for Universal Euler Convective Cancellations</em>.</p>\n<p>The paper proves that a reality-compatible Fourier symbol on the three-torus satisfying the universal Euler convective cancellation must be the restriction of a constant-coefficient self-adjoint operator of order at most one, and that the solenoidal case reduces to the energy&ndash;helicity family. The proof combines analytic propagation over the lattice with finite rank certificates.</p>\n<p>The programs certify the ranks of the finite seed matrices over the rationals, using integer and exact rational arithmetic and reductions modulo primes; no floating-point rank decision enters at any point. They also replay the propagation orderings in finite coordinate boxes, verify the singular-value formulas, and reproduce the certificate data reported in the paper. Two programs are independent at the algorithmic level and reconstruct the constraint matrices by recipient wavevector.</p>\n<p>The Lean 4 development, built on Mathlib, covers the main classification theorem and its solenoidal corollary, together with the all-mode completion, the finite-dimensional content of the sharp certificate counts, and the local spectral and conditioning results. It contains no admitted proofs; the two finite seed rank certificates use <code>native_decide</code>.</p>\n<p>All programs are run from a single entry point, which reports the interpreter version, source revision and working-tree state, and fails if any certificate is missing or any assertion fails. See the README for reproduction instructions.</p>",
+  "creators": [
+    {
+      "name": "Nogueira Pires, Rael"
+    }
+  ],
+  "upload_type": "software",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "keywords": [
+    "Euler equations",
+    "Fourier multipliers",
+    "rigidity",
+    "exact arithmetic certificates",
+    "Lean 4",
+    "formal verification",
+    "energy and helicity"
+  ]
+}
