@@ -14,8 +14,7 @@ import FourierMultiplierRigidity.SeedCertificate
 /-!
 # Fourier-multiplier rigidity for universal Euler convective cancellations
 
-This file formalizes Theorem A from
-`research/01-fourier-multiplier-rigidity/proof.md`.
+This file formalizes Theorem A of the accompanying manuscript.
 
 The development is intentionally kept separate from the exact Python
 certificates: no fact is imported from them.

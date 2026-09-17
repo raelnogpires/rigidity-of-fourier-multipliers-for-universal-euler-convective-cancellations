@@ -53,7 +53,7 @@ vanish, matching the manuscript's Lemma 4.1 (test field structure) and Lemma
 5.3 (one-triad solenoidal determination) applied literally at this new mode,
 rather than only through the abstract propagation predicate `VanishesAt`. The
 integer-row/rank-certificate generalization remains open; see
-`lean/README.md` and `audits/repository-audit.md`.
+`lean/README.md`.
 -/
 
 namespace FourierMultiplierRigidity.SolenoidalSeedBridge
